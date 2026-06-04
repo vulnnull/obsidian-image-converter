@@ -1,5 +1,6 @@
 // ProcessSingleImageModal.ts
 import { App, Modal, Notice, TFile, Setting, MarkdownView } from "obsidian";
+import { strings, t } from "./i18n";
 import ImageConverterPlugin from "./main";
 import { OutputFormat, ResizeMode, EnlargeReduce } from "./ImageConverterSettings";
 import { ENCODER_CONFIGS, ImageProcessor } from "./ImageProcessor";
@@ -357,17 +358,17 @@ export class ProcessSingleImageModal extends Modal {
                                 const detectedPath = await findFfmpegExecutablePath(this.app);
                                 if (!detectedPath) {
                                     // eslint-disable-next-line obsidianmd/ui/sentence-case
-                                    new Notice("FFmpeg not found. Try installing via: Homebrew (macOS), Chocolatey (Windows), or apt/snap (Linux). Then set the path manually.", 8000);
+                                    new Notice(strings.settings.ffmpegNotFound, 8000);
                                     return;
                                 }
                                 updateFfmpegPath(detectedPath);
                                 void this.plugin.saveSettings();
                                 // eslint-disable-next-line obsidianmd/ui/sentence-case
-                                new Notice("FFmpeg path detected and saved.", 4000);
+                                new Notice(strings.settings.ffmpegPathDetectedAndSaved, 4000);
                             } catch (error) {
                                 const message = this.getErrorMessage(error);
                                 console.error("FFmpeg auto-detection failed:", message);
-                                new Notice(`FFmpeg auto-detection failed: ${message}`);
+                                new Notice(t(strings.settings.ffmpegAutoDetectionFailed, { message }));
                             } finally {
                                 button.setDisabled(false);
                             }
@@ -396,7 +397,7 @@ export class ProcessSingleImageModal extends Modal {
                         .onClick(async () => {
                             if (!this.modalSettings.ffmpegExecutablePath) {
                                 // eslint-disable-next-line obsidianmd/ui/sentence-case
-                                new Notice("Please specify FFmpeg executable path first");
+                                new Notice(strings.settings.pleaseSpecifyFfmpegPath);
                                 return;
                             }
 
@@ -410,7 +411,7 @@ export class ProcessSingleImageModal extends Modal {
                                 if (encoder) {
                                     const encoderInfo = ENCODER_CONFIGS[encoder];
                                     const platformHint = encoderInfo ? ` (${encoderInfo.platformHint})` : "";
-                                    new Notice(`✓ Working encoder: ${encoder}${platformHint}`, 5000);
+                                    new Notice(t(strings.settings.workingEncoder, { encoder, platformHint }), 5000);
 
                                     this.modalSettings.detectedEncoder = encoder;
                                     if (currentPreset) {
@@ -425,18 +426,18 @@ export class ProcessSingleImageModal extends Modal {
                                     const cachedInfo = cachedEncoder ? ENCODER_CONFIGS[cachedEncoder] : undefined;
                                     if (cachedEncoder && cachedInfo) {
                                         const platformHint = cachedInfo ? ` (${cachedInfo.platformHint})` : "";
-                                        new Notice(`Encoder detection failed. Using cached encoder: ${cachedEncoder}${platformHint}`, 5000);
+                                        new Notice(t(strings.settings.encoderDetectionFailedUsingCached, { cachedEncoder, platformHint }), 5000);
                                         updateEncoderConfig(cachedEncoder);
                                         return;
                                     }
 
                                     // eslint-disable-next-line obsidianmd/ui/sentence-case
-                                    new Notice("No working AV1 encoder found. Install FFmpeg with AV1 support.", 5000);
+                                    new Notice(strings.settings.noWorkingAv1EncoderFound, 5000);
                                     resetEncoderUi();
                                 }
                             } catch (error) {
                                 console.error("Encoder detection error:", error);
-                                new Notice(`Error detecting encoder: ${error instanceof Error ? error.message : String(error)}`);
+                                new Notice(t(strings.settings.errorDetectingEncoder, { errorMessage: error instanceof Error ? error.message : String(error) }));
                             } finally {
                                 button.setButtonText("Detect encoder");
                                 button.setDisabled(false);
@@ -718,7 +719,7 @@ export class ProcessSingleImageModal extends Modal {
             }
 
             if (conversionPreset && this.plugin.folderAndFilenameManagement.shouldSkipConversion(this.imageFile.name, conversionPreset)) {
-                new Notice(`Skipped conversion of image "${this.imageFile.name}" due to skip pattern match in the conversion preset.`, 2000);
+                new Notice(t(strings.processModals.skippedConversionDueToSkipPattern, { fileName: this.imageFile.name }), 2000);
                 this.close();
                 return;
             }
@@ -802,7 +803,7 @@ export class ProcessSingleImageModal extends Modal {
             // --- File Creation/Replacement ---
             if (processedImageBuffer && this.plugin.settings.revertToOriginalIfLarger && processedImageBuffer.byteLength > originalSize) {
                 this.plugin.showSizeComparisonNotification(originalSize, processedImageBuffer.byteLength);
-                new Notice(`Using original image for "${this.imageFile.name}" as processed image is larger.`, 1000);
+                new Notice(t(strings.processModals.usingOriginalImageLarger, { fileName: this.imageFile.name }), 1000);
                 // We don't create/modify a file, but the link *might* need updating (if format changed).
             } else if (processedImageBuffer) {
                 this.plugin.showSizeComparisonNotification(originalSize, processedImageBuffer.byteLength);
@@ -817,7 +818,7 @@ export class ProcessSingleImageModal extends Modal {
                         // Now modify the *renamed* file.
                         await this.app.vault.modifyBinary(renamedFile, processedImageBuffer);
                     } else {
-                        new Notice(`Error: Could not find renamed file at ${fullPath}`);
+                        new Notice(t(strings.processModals.couldNotFindRenamedFile, { fullPath }));
                         return; // Exit if rename failed
                     }
                 } else {
@@ -843,7 +844,7 @@ export class ProcessSingleImageModal extends Modal {
                 const newContent = fileContent.replace(linkRegex, newLinkText);
                 if (newContent !== fileContent) {
                     editor.setValue(newContent);
-                    new Notice(`Link updated in "${activeView.file?.name}"`, 1000);
+                    new Notice(t(strings.processModals.linkUpdatedIn, { fileName: activeView.file?.name ?? '' }), 1000);
                 }
             }
 
@@ -852,9 +853,9 @@ export class ProcessSingleImageModal extends Modal {
             } catch (error) {
                 // Non-critical: image was processed successfully, but view refresh failed
                 console.error("Error refreshing active note after image processing:", error);
-                new Notice("Image processed, but failed to refresh view. You may need to reload the note.");
+                new Notice(strings.processModals.imageProcessedButFailedToRefresh);
             }
-            new Notice(`Image "${this.imageFile.name}" processed`, 1000);
+            new Notice(t(strings.processModals.imageProcessed, { fileName: this.imageFile.name }), 1000);
             this.close();
 
         } catch (error) {

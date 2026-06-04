@@ -1,5 +1,6 @@
 // ImageProcessor.ts
 import { Notice, Platform } from "obsidian";
+import { strings, t } from "./i18n";
 import { SupportedImageFormats } from "./SupportedImageFormats";
 // eslint-disable-next-line import/no-nodejs-modules -- Required for spawning external processes (FFmpeg, pngquant); Obsidian runs on Electron with Node.js support
 import { ChildProcess, spawn } from 'child_process';
@@ -672,7 +673,7 @@ if (format === 'ORIGINAL') {
             const filename = (file instanceof File) ? file.name : 'image';
             const message = error instanceof Error ? (error.message || 'Unknown error') : String(error);
             console.error(`Error processing image "${filename}" (target: ${format}):`, error);
-            new Notice(`Failed to process image "${filename}" (target: ${format}): ${message}`);
+            new Notice(t(strings.imageProcessor.failedToProcessImage, { filename, format, message }));
             return file.arrayBuffer(); // Fallback to original
         }
     }
@@ -819,7 +820,7 @@ if (format === 'ORIGINAL') {
                 const pngquantQuality = this.preset?.pngquantQuality || this.settings.pngquantQuality;
                 // Check if executable path is set
                 if (!pngquantExecutablePath) {
-                    new Notice("The pngquant executable path is not set. Please configure it in the plugin settings.");
+                    new Notice(strings.imageProcessor.pngquantPathNotSet);
                     return file.arrayBuffer(); // Return original
                 }
 
@@ -843,7 +844,7 @@ if (format === 'ORIGINAL') {
                 // Check if executable path is set
                 if (!ffmpegExecutablePath) {
                     // eslint-disable-next-line obsidianmd/ui/sentence-case -- FFmpeg is the official brand name
-                    new Notice("FFmpeg executable path is not set. Please configure it in the plugin settings.");
+                    new Notice(strings.imageProcessor.ffmpegPathNotSet);
                     return file.arrayBuffer();  // Return original
                 }
 
@@ -1057,7 +1058,7 @@ if (format === 'ORIGINAL') {
                             // Try to find a software fallback
                             const softwareFallback = await this.detectSoftwareEncoder(normalizedExecutablePath);
                             if (softwareFallback) {
-                                new Notice(`Hardware encoder unavailable. Falling back to ${softwareFallback}...`);
+                                new Notice(t(strings.imageProcessor.hardwareEncoderUnavailable, { softwareFallback }));
                                 // Invalidate cache and retry with software encoder
                                 ImageProcessor.encoderDetectionCache.delete(normalizedExecutablePath);
                                 ImageProcessor.encoderDetectionCache.set(normalizedExecutablePath, softwareFallback);

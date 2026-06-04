@@ -1,4 +1,5 @@
 import { Modal, Notice, App, Setting, ButtonComponent, DropdownComponent, TextComponent } from "obsidian";
+import { strings } from "./i18n";
 import {
     ImageConverterSettings,
     ConversionPreset,
@@ -499,7 +500,7 @@ export class PresetSelectionModal extends Modal {
                             appWithSettings.setting.open();
                             appWithSettings.setting.openTabById(this.plugin.manifest.id);
                         } else {
-                            new Notice("Unable to open settings.");
+                            new Notice(strings.processModals.unableToOpenSettings);
                         }
                     });
             })

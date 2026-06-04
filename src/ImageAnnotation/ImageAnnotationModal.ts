@@ -1,3 +1,4 @@
+import { strings, t } from "../i18n";
 import {
     App,
     Modal,
@@ -213,7 +214,7 @@ export class ImageAnnotationModal extends Modal {
             img.src = blobUrl;
         } catch (error) {
             console.error('Error loading image:', error);
-            new Notice('Error loading image');
+            new Notice(strings.annotation.errorLoadingImage);
         }
     }
 
@@ -851,7 +852,7 @@ export class ImageAnnotationModal extends Modal {
 
         await this.plugin.saveSettings();
         this.updatePresetButtons();
-        new Notice(`Preset ${index + 1} saved`);
+        new Notice(t(strings.annotation.presetSaved, { index: index + 1 }));
     }
 
     private loadPreset(index: number): void {

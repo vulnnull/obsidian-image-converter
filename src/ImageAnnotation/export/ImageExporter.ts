@@ -1,4 +1,5 @@
 import { App, Notice, TFile, MarkdownView } from 'obsidian';
+import { strings } from '../../i18n';
 import { Canvas, FabricImage, ImageFormat, type TMat2D } from 'fabric';
 import { ExtendedImageFormat } from '../types';
 import mime from '../../mime.min.js';
@@ -135,7 +136,7 @@ export class ImageExporter {
                 canvas.renderAll();
                 canvas.preserveObjectStacking = originalStacking;
                 canvas.requestRenderAll();
-                new Notice('Failed to export image');
+                new Notice(strings.annotation.failedToExportImage);
                 return false;
             }
 
@@ -144,7 +145,7 @@ export class ImageExporter {
 
             await this.app.vault.modifyBinary(file, arrayBuffer);
 
-            new Notice('Image saved successfully');
+            new Notice(strings.annotation.imageSavedSuccessfully);
 
             await this.refreshActiveView();
 
@@ -154,7 +155,7 @@ export class ImageExporter {
             return true;
         } catch (error) {
             console.error('Save error:', error);
-            new Notice('Error saving image');
+            new Notice(strings.annotation.errorSavingImage);
             return false;
         }
     }

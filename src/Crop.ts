@@ -1,4 +1,5 @@
 import { App, Component, Modal, Notice, TFile } from 'obsidian';
+import { strings, t } from './i18n';
 
 
 type SupportedImageFormat = 'jpeg' | 'png' | 'webp' | 'avif';
@@ -265,7 +266,7 @@ export class Crop extends Modal {
             this.componentContainer.registerDomEvent(cancelButton, 'click', () => this.close());
             this.componentContainer.registerDomEvent(resetButton, 'click', () => this.resetSelection());
         } catch (error) {
-            new Notice('Error loading image for cropping');
+            new Notice(strings.crop.errorLoadingImage);
             console.error('Crop modal error:', error);
             this.close();
         }
@@ -945,7 +946,7 @@ export class Crop extends Modal {
 	
 			await this.app.vault.modifyBinary(this.imageFile, arrayBuffer);
 	
-			new Notice('Image saved successfully');
+			new Notice(strings.crop.imageSavedSuccessfully);
 	
 			const leaf = this.app.workspace.getMostRecentLeaf();
 			if (leaf) {
@@ -962,7 +963,7 @@ export class Crop extends Modal {
 	} catch (error) {
 			console.error('Save error:', error);
 			const message = error instanceof Error ? error.message : String(error);
-			new Notice(`Error saving image: ${message}`);
+			new Notice(t(strings.crop.errorSavingImage, { message }));
 		}
 	}
 

@@ -9,6 +9,7 @@ import {
     TextComponent,
     TFile
 } from "obsidian";
+import { strings, t } from "./i18n";
 import ImageConverterPlugin from "./main";
 import { VariableProcessor } from "./VariableProcessor";
 import { LinkFormat, PathFormat, LinkFormatSettings, LinkFormatPreset } from "./LinkFormatSettings";
@@ -575,8 +576,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         this.renderImageCaptionSettingsSection(containerEl);
 
         new Setting(containerEl)
-            .setName("Right-click menu")
-            .then((setting) => addInfoIcon(setting, "Enable to show a right-click context menu."))
+            .setName(strings.settings.rightClickMenu)
+            .then((setting) => addInfoIcon(setting, strings.settings.rightClickMenuInfo))
             .addToggle((toggle) =>
                 toggle
                     .setValue(this.plugin.settings.enableContextMenu)
@@ -584,16 +585,16 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                         this.plugin.settings.enableContextMenu = value;
                         await this.plugin.saveSettings();
                         if (!value) {
-                            new Notice("Context menu disabled. Reload Obsidian to see changes.", 5000);
+                            new Notice(strings.settings.contextMenuDisabled, 5000);
                         } else {
-                            new Notice("Context menu enabled. Reload Obsidian to see changes.", 5000);
+                            new Notice(strings.settings.contextMenuEnabled, 5000);
                         }
                     })
             );
 
         new Setting(containerEl)
-            .setName("Cursor position after drop/paste")
-            .then((setting) => addInfoIcon(setting, "Where to place the cursor after dropping or pasting the image"))
+            .setName(strings.settings.cursorPositionAfterDropPaste)
+            .then((setting) => addInfoIcon(setting, strings.settings.cursorPositionAfterDropPasteInfo))
             .addDropdown((dropdown) => {
                 dropdown
                     .addOption("front", "At the front of the link")
@@ -607,7 +608,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
 
         new Setting(containerEl)
-            .setName("Never process these filenames")
+            .setName(strings.settings.neverProcessFilenames)
             .then((setting) => addInfoIcon(setting, "A comma-separated list of file names or patterns that the plugin should never process. Supports glob (*) and regex (enclosed in `/` or `r/` or `regex:`). E.g., `old.png, /^_/, r/temp-.*\\.jpg$/` . Or simply skip all cat images e.g.: /cat/ or all gif images *.gif"))
             .addTextArea((text) => {
                 text.setValue(this.plugin.settings.neverProcessFilenames)
@@ -619,7 +620,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             });
 
         new Setting(containerEl)
-            .setName('Show notification for image size changes')
+            .setName(strings.settings.showSizeNotification)
             .then((setting) => addInfoIcon(setting, 'Display a notification showing how much space was saved after processing an image.'))
             .addToggle(toggle => toggle
                 .setValue(this.plugin.settings.showSpaceSavedNotification)
@@ -631,8 +632,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
 
         new Setting(containerEl)
-            .setName("Show window")
-            .setDesc("Choose whether to show processing options on each image drop/paste")
+            .setName(strings.settings.showWindow)
+            .setDesc(strings.settings.showWindowDesc)
             .addDropdown((dropdown) => {
                 dropdown
                     .addOption("always", "Always show")
@@ -737,7 +738,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         // "Save as New Preset" button
         new ButtonComponent(globalPresetContainer)
             .setIcon("plus")
-    .setTooltip("Save current selection as a new global preset")
+    .setTooltip(strings.settings.saveCurrentSelectionAsNewGlobalPreset)
             .onClick((event: MouseEvent) => {
                 // Prevent the click from affecting the global visibility toggle
                 event.stopPropagation();
@@ -762,14 +763,14 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             new ButtonComponent(globalPresetContainer)
                 .setIcon("trash")
                 .setClass("danger")
-    .setTooltip("Delete selected global preset")
+    .setTooltip(strings.settings.deleteSelectedGlobalPreset)
             .onClick((event: MouseEvent) => {
                     // Prevent the click from affecting the global visibility toggle
                     event.stopPropagation();
                     new ConfirmDialog(
                         this.app,
-                        "Confirm Delete",
-                        `Are you sure you want to delete the global preset "${this.plugin.settings.selectedGlobalPreset}"?`,
+                        strings.confirmDialogs.confirmDelete,
+                        t(strings.settings.confirmDeleteGlobalPreset, { presetName: this.plugin.settings.selectedGlobalPreset }),
                         "Delete",
                                   () => {
                             this.plugin.settings.globalPresets = this.plugin.settings.globalPresets.filter(
@@ -820,9 +821,9 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                         this.plugin.settings.isImageAlignmentEnabled = value;
                         await this.plugin.saveSettings();
                         if (!value) {
-                            new Notice("Image alignment disabled. Reload Obsidian to see changes.", 5000);
+                            new Notice(strings.settings.imageAlignmentDisabled, 5000);
                         } else {
-                            new Notice("Image alignment enabled. Reload Obsidian to see changes.", 5000);
+                            new Notice(strings.settings.imageAlignmentEnabled, 5000);
                         }
                         this.display(); // Refresh the settings UI
                     })
@@ -850,7 +851,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         if (this.plugin.settings.isImageAlignmentEnabled) { // Conditionally render cleanup options
             new Setting(imageAlignmentSection)
-                .setName("Default alignment for new images")
+                .setName(strings.settings.defaultAlignmentForNewImages)
                 .setDesc("Automatically apply this alignment when inserting new images. Set to 'none' to disable.")
                 .addDropdown(dropdown => dropdown
                     .addOptions({
@@ -868,7 +869,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             // --- Cache Location Setting ---
             new Setting(imageAlignmentSection)
-                .setName("Image alignment cache location")
+                .setName(strings.settings.imageAlignmentCacheLocation)
                 .setDesc(
                     "Choose where to store the cache file for image alignments. " +
                     "Note: App reload required."
@@ -892,7 +893,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 );
 
             new Setting(imageAlignmentSection) // Interval setting is now inside the collapsible section
-                .setName("Image alignment cache cleanup interval")
+                .setName(strings.settings.imageAlignmentCacheCleanupInterval)
                 .setDesc(
                     "Interval (in minutes) to clean up redundant entries from image alignment cache. Default: 1 hour (0 to disable)"
                 )
@@ -947,9 +948,9 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                         this.plugin.settings.isImageResizeEnbaled = value;
                         await this.plugin.saveSettings();
                         if (!value) {
-                            new Notice("Image resizing disabled. Reload Obsidian to see changes.", 5000);
+                            new Notice(strings.settings.imageResizingDisabled, 5000);
                         } else {
-                            new Notice("Image resizing enabled. Reload Obsidian to see changes.", 5000);
+                            new Notice(strings.settings.imageResizingEnabled, 5000);
                         }
                         this.display(); // Refresh the settings UI
                     })
@@ -978,7 +979,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         if (this.plugin.settings.isImageResizeEnbaled) { // Conditionally render cleanup options
             // --- Checkboxes for Drag and Scroll Resize ---
             new Setting(imageDragResizeSection)
-                .setName("Enable drag resize")
+                .setName(strings.settings.enableDragResize)
                 .setDesc("Allow resizing images by dragging edges of the image.")
                 .then((setting) => addInfoIcon(setting, "This creates a new <DIV> under the image to show resizing HANDLES. But this might cause some incompatibility with certain themes and cause images to jump around."))
                 .addToggle((toggle) =>
@@ -997,8 +998,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 const apectRatioSettingsContainer = imageDragResizeSection.createDiv('fix-aspect-ratio-settings');
 
                 new Setting(apectRatioSettingsContainer)
-                    .setName('Lock the aspect ratio when dragging')
-                    .setDesc('Prevent accidental distortions of image aspect ratio when dragging to resize')
+                    .setName(strings.settings.lockAspectRatioWhenDragging)
+                    .setDesc(strings.settings.lockAspectRatioWhenDraggingDesc)
                     .addToggle(toggle => toggle
                         .setValue(this.plugin.settings.isDragAspectRatioLocked)
                         .onChange(async (value) => {
@@ -1010,8 +1011,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
 
             new Setting(imageDragResizeSection)
-                .setName('Enable scroll-wheel resize')
-                .setDesc('Allow resizing images using the scroll wheel')
+                .setName(strings.settings.enableScrollWheelResize)
+                .setDesc(strings.settings.enableScrollWheelResizeDesc)
                 .addToggle(toggle => toggle
                     .setValue(this.plugin.settings.isScrollResizeEnabled)
                     .onChange(async (value) => {
@@ -1027,8 +1028,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 const scrollSettingsContainer = imageDragResizeSection.createDiv('scroll-resize-settings');
 
                 new Setting(scrollSettingsContainer)
-                    .setName('Scroll-wheel modifier key')
-                    .setDesc('Key that must be held while using scroll-wheel to resize')
+                    .setName(strings.settings.scrollWheelModifierKey)
+                    .setDesc(strings.settings.scrollWheelModifierKeyDesc)
                     .addDropdown(dropdown => dropdown
                         .addOptions({
                             'None': 'None',
@@ -1044,8 +1045,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                         }));
 
                 new Setting(scrollSettingsContainer)
-                    .setName('Scroll-wheel resize sensitivity')
-                    .setDesc('Adjust how sensitive the scroll-wheel resize is (0.01-1.0)')
+                    .setName(strings.settings.scrollWheelResizeSensitivity)
+                    .setDesc(strings.settings.scrollWheelResizeSensitivityDesc)
                     .addSlider(slider => slider
                         .setLimits(0.01, 1, 0.01)
                         .setValue(this.plugin.settings.resizeSensitivity)
@@ -1057,7 +1058,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             }
 
             new Setting(imageDragResizeSection)
-                .setName("Disable Obsidian image selection on click")
+                .setName(strings.settings.disableObsidianImageSelectionOnClick)
                 .then((setting) => addInfoIcon(setting, "Keep focus in the editor when clicking an internal image in live preview instead of showing Obsidian's default outline/resize corner. Cursor placement follows the drop/paste cursor position setting."))
                 .setDesc("Keep focus in the editor when clicking an internal image in live preview instead of showing Obsidian's default outline/resize corner. Cursor placement follows the drop/paste cursor position setting.")
                 .addToggle((toggle) =>
@@ -1071,7 +1072,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             // New Setting: Resize Cursor Location
             new Setting(imageDragResizeSection)
-                .setName("Cursor position during resize")
+                .setName(strings.settings.cursorPositionDuringResize)
                 // eslint-disable-next-line obsidianmd/ui/sentence-case -- Intentional messaging style
                 .then((setting) => addInfoIcon(setting, "Where to place the cursor when resizing an image. Note: 'don't move cursor' - will try to keep your exisiting cursor in place but if you DRAG-RESIZE and cursor is still over the image when you finish resizing, it will get the text selected."))
                 .addDropdown((dropdown) => {
@@ -1088,8 +1089,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 });
 
             new Setting(imageDragResizeSection)
-                .setName("Allow resizing in reading mode")
-                .setDesc("Non-destructive resizing in reading mode is only visual, thus if it is too distractive you can disable it.")
+                .setName(strings.settings.allowResizingInReadingMode)
+                .setDesc(strings.settings.allowResizingInReadingModeDesc)
                 .addToggle((toggle) =>
                     toggle
                         .setValue(this.plugin.settings.isResizeInReadingModeEnabled)
@@ -1139,9 +1140,9 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                         this.plugin.settings.enableImageCaptions = value;
                         await this.plugin.saveSettings();
                         if (!value) {
-                            new Notice("Image captions disabled. Reload Obsidian to see changes.", 5000);
+                            new Notice(strings.settings.imageCaptionsDisabled, 5000);
                         } else {
-                            new Notice("Image captions enabled. Reload Obsidian to see changes.", 5000);
+                            new Notice(strings.settings.imageCaptionsEnabled, 5000);
                         }
                         this.display();
                     })
@@ -1170,7 +1171,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         // --- Image Captions Settings (Moved from display() function) ---
         if (this.plugin.settings.enableImageCaptions) {
             new Setting(imageCaptionSection)
-                .setName("Text alignment within caption")
+                .setName(strings.settings.textAlignmentWithinCaption)
                 .addDropdown(dropdown =>
                     dropdown.addOptions({
                         "left": "Left",
@@ -1186,8 +1187,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 );
 
             new Setting(imageCaptionSection)
-                .setName("Text transform")
-                .setDesc("Set text transformation")
+                .setName(strings.settings.textTransform)
+                .setDesc(strings.settings.textTransformDesc)
                 .addDropdown(dropdown =>
                     dropdown.addOptions({
                         "none": "None",
@@ -1204,8 +1205,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 );
 
             new Setting(imageCaptionSection) // Font Size Setting is now FIRST setting in the section
-                .setName("Font size")
-                .setDesc("Set the font size for image captions (e.g., 12px, 1.2em).")
+                .setName(strings.settings.fontSize)
+                .setDesc(strings.settings.fontSizeDesc)
                 .addText(text =>
                     text.setValue(this.plugin.settings.captionFontSize)
                         .onChange(async (value) => {
@@ -1216,8 +1217,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 );
 
             new Setting(imageCaptionSection)
-                .setName("Weight")
-                .setDesc("Set font weight (e.g., normal, bold, 600)")
+                .setName(strings.settings.weight)
+                .setDesc(strings.settings.weightDesc)
                 .addDropdown(dropdown =>
                     dropdown.addOptions({
                         "normal": "Normal",
@@ -1237,7 +1238,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 );
 
             new Setting(imageCaptionSection)
-                .setName("Color")
+                .setName(strings.settings.color)
                 .setDesc("Choose a color for image captions e.g.: red, grey, white, black, hsl(50, 50%, 50%), rgb(50%, 75%, 100%) ")
                 .addText(text =>
                     text.setValue(this.plugin.settings.captionColor)
@@ -1249,8 +1250,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 );
 
             new Setting(imageCaptionSection)
-                .setName("Font style")
-                .setDesc("Set the font style (e.g., italic, normal).")
+                .setName(strings.settings.fontStyle)
+                .setDesc(strings.settings.fontStyleDesc)
                 .addDropdown(dropdown =>
                     dropdown.addOptions({
                         "italic": "Italic", "normal": "Normal"
@@ -1264,7 +1265,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 );
 
             new Setting(imageCaptionSection)
-                .setName("Background color")
+                .setName(strings.settings.backgroundColor)
                 .setDesc("Choose a background color for image captions (e.g.: transparent, #f5f5f5, rgba(255,255,255,0.8))")
                 .addText(text =>
                     text.setValue(this.plugin.settings.captionBackgroundColor)
@@ -1277,8 +1278,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             // In renderImageCaptionSettingsSection
             new Setting(imageCaptionSection)
-                .setName("Border")
-                .setDesc("Set border style (e.g., 1px solid gray)")
+                .setName(strings.settings.border)
+                .setDesc(strings.settings.borderDesc)
                 .addText(text =>
                     text.setValue(this.plugin.settings.captionBorder)
                         .onChange(async (value) => {
@@ -1288,8 +1289,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                         })
                 );
             new Setting(imageCaptionSection)
-                .setName("Border corner radius")
-                .setDesc("Set border radius for caption (e.g., make it slightly rounded: 4px)")
+                .setName(strings.settings.borderCornerRadius)
+                .setDesc(strings.settings.borderCornerRadiusDesc)
                 .addText(text =>
                     text.setValue(this.plugin.settings.captionBorderRadius)
                         .onChange(async (value) => {
@@ -1300,8 +1301,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 );
 
             new Setting(imageCaptionSection)
-                .setName("Space at the top")
-                .setDesc("Set space between image and caption (e.g., 4px, 8px)")
+                .setName(strings.settings.spaceAtTheTop)
+                .setDesc(strings.settings.spaceAtTheTopDesc)
                 .addText(text =>
                     text.setValue(this.plugin.settings.captionMarginTop)
                         .onChange(async (value) => {
@@ -1312,8 +1313,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 );
 
             new Setting(imageCaptionSection)
-                .setName("Padding")
-                .setDesc("Set padding around caption (e.g., 4px 8px)")
+                .setName(strings.settings.padding)
+                .setDesc(strings.settings.paddingDesc)
                 .addText(text =>
                     text.setValue(this.plugin.settings.captionPadding)
                         .onChange(async (value) => {
@@ -1325,8 +1326,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             // Skip Caption Extensions
             new Setting(imageCaptionSection)
-                .setName("Skip caption extensions")
-                .setDesc("Comma-separated list of image extensions to exclude from captions (e.g., PNG, JPG).")
+                .setName(strings.settings.skipCaptionExtensions)
+                .setDesc(strings.settings.skipCaptionExtensionsDesc)
                 .addText((text) => {
                     text.setValue(this.plugin.settings.skipCaptionExtensions)
                         .onChange(async (value) => {
@@ -1639,7 +1640,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 .onClick(() => {
                     new ConfirmDialog(
                         this.app,
-                        "Confirm Delete",
+                        strings.confirmDialogs.confirmDelete,
                         `Are you sure you want to delete the preset "${preset.name}"?`,
                         "Delete",
                         () => {
@@ -1786,7 +1787,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         // Name Input
         new Setting(formContainer)
-            .setName("Preset name")
+            .setName(strings.settings.presetName)
             .addText((text) => {
                 text.setValue(preset.name).onChange((value) => {
                     preset.name = value;
@@ -2353,7 +2354,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                                 const detectedPath = await findFfmpegExecutablePath(this.app);
                                 if (!detectedPath) {
                                     // eslint-disable-next-line obsidianmd/ui/sentence-case
-                                    new Notice("FFmpeg not found. Try installing via: Homebrew (macOS), Chocolatey (Windows), or apt/snap (Linux). Then set the path manually.", 8000);
+                                    new Notice(strings.settings.ffmpegNotFound, 8000);
                                     return;
                                 }
 
@@ -2376,11 +2377,11 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
                                 textComponent?.setValue(normalizedPath);
                                 // eslint-disable-next-line obsidianmd/ui/sentence-case
-                                new Notice("FFmpeg path detected and saved.", 4000);
+                                new Notice(strings.settings.ffmpegPathDetectedAndSaved, 4000);
                             } catch (error) {
                                 const message = error instanceof Error ? error.message : String(error);
                                 console.error("FFmpeg auto-detection failed:", message);
-                                new Notice(`FFmpeg auto-detection failed: ${message}`);
+                                new Notice(t(strings.settings.ffmpegAutoDetectionFailed, { message }));
                             } finally {
                                 button.setDisabled(false);
                             }
@@ -2427,7 +2428,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                         .onClick(async () => {
                             if (!preset.ffmpegExecutablePath) {
                                 // eslint-disable-next-line obsidianmd/ui/sentence-case -- FFmpeg is the official brand name
-                                new Notice("Please specify FFmpeg executable path first");
+                                new Notice(strings.settings.pleaseSpecifyFfmpegPath);
                                 return;
                             }
                             
@@ -2446,7 +2447,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                                 if (encoder) {
                                     const encoderInfo = ENCODER_CONFIGS[encoder];
                                     const platformHint = encoderInfo ? ` (${encoderInfo.platformHint})` : '';
-                                    new Notice(`✓ Working encoder: ${encoder}${platformHint}`, 5000);
+                                    new Notice(t(strings.settings.workingEncoder, { encoder, platformHint }), 5000);
                                     
                                     // Save detected encoder to preset (persists in data.json)
                                     preset.detectedEncoder = encoder;
@@ -2496,7 +2497,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                                             return;
                                         }
                                         const platformHint = cachedInfo ? ` (${cachedInfo.platformHint})` : '';
-                                        new Notice(`Encoder detection failed. Using cached encoder: ${cachedEncoder}${platformHint}`, 5000);
+                                        new Notice(t(strings.settings.encoderDetectionFailedUsingCached, { cachedEncoder, platformHint }), 5000);
                                         encoderDetectionDesc(`${cachedEncoder}${platformHint}`, cachedInfo.crfMin, cachedInfo.crfMax);
                                         encoderDetectionSetting.settingEl.addClass("image-converter-encoder-detected");
                                         encoderDetectionButton?.buttonEl?.addClass("image-converter-encoder-detected");
@@ -2529,14 +2530,14 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                                     }
 
                                     // eslint-disable-next-line obsidianmd/ui/sentence-case -- Technical terms: AV1, FFmpeg
-                                    new Notice("No working AV1 encoder found. Install FFmpeg with AV1 support.", 5000);
+                                    new Notice(strings.settings.noWorkingAv1EncoderFound, 5000);
                                     // eslint-disable-next-line obsidianmd/ui/sentence-case
                                     encoderDetectionSetting.setDesc("No working encoder found. Install FFmpeg with libaom-av1, libsvtav1, or ensure hardware drivers are installed.");
                                     resetEncoderUi(encoderDetectionSetting, crfSetting, presetSetting);
                                 }
                             } catch (error) {
                                 console.error("Encoder detection error:", error);
-                                new Notice(`Error detecting encoder: ${error instanceof Error ? error.message : String(error)}`);
+                                new Notice(t(strings.settings.errorDetectingEncoder, { errorMessage: error instanceof Error ? error.message : String(error) }));
                             } finally {
                                 button.setButtonText("Detect encoder");
                                 button.setDisabled(false);
@@ -3784,7 +3785,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             .setCta()
             .onClick(async () => {
                 if (!preset.name) {
-                    new Notice("Preset name cannot be empty.");
+                    new Notice(strings.settings.presetNameCannotBeEmpty);
                     return;
                 }
 
@@ -3814,7 +3815,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                             ))
                     )
                 ) {
-                    new Notice("A preset with this name already exists.");
+                    new Notice(strings.settings.presetWithNameAlreadyExists);
                     return;
                 }
 
@@ -3965,7 +3966,7 @@ export class SaveGlobalPresetModal extends Modal {
 
         // Preset Name Input
         new Setting(contentEl)
-            .setName("Preset name")
+            .setName(strings.settings.presetName)
             .addText((text) => {
                 text.setPlaceholder("Enter preset name")
                     .setValue(this.presetName)
@@ -3989,7 +3990,7 @@ export class SaveGlobalPresetModal extends Modal {
                             this.callback(this.presetName);
                             this.close();
                         } else {
-                            new Notice("Please enter a preset name.");
+                            new Notice(strings.settings.pleaseEnterPresetName);
                         }
                     })
             )

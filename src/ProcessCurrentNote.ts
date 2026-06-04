@@ -19,6 +19,7 @@ import ImageConverterPlugin from './main';
 
 import { BatchImageProcessor } from './BatchImageProcessor';
 import { CanvasData, CanvasNode } from './canvas-types';
+import { strings, t } from "./i18n";
 
 export class ProcessCurrentNote extends Modal {
     private imageCount = 0;
@@ -63,11 +64,11 @@ export class ProcessCurrentNote extends Modal {
 			cls: "modal-header",
 		});
 		headerContainer.createEl("h2", {
-			text: "Convert, compress and resize",
+			text: strings.processModals.convertCompressResize,
 		});
 
 		headerContainer.createEl("h6", {
-			text: `all images in: ${this.activeFile.basename}.${this.activeFile.extension}`,
+			text: t(strings.processModals.convertCompressResizeSubtitle, { fileName: `${this.activeFile.basename}.${this.activeFile.extension}` }),
 			cls: "modal-subtitle",
 		});
 
@@ -79,24 +80,24 @@ export class ProcessCurrentNote extends Modal {
 			cls: "image-counts-display",
 		});
 
-		countsDisplay.createEl("span", { text: "Total images found: " });
+		countsDisplay.createEl("span", { text: strings.processModals.totalImagesFound });
 		this.imageCountDisplay = countsDisplay.createEl("span");
 
 		countsDisplay.createEl("br");
 
-		countsDisplay.createEl("span", { text: "To be processed: " });
+		countsDisplay.createEl("span", { text: strings.processModals.tobeProcessed });
 		this.processedCountDisplay = countsDisplay.createEl("span");
 
 		countsDisplay.createEl("br");
 
-		countsDisplay.createEl("span", { text: "Skipped: " });
+		countsDisplay.createEl("span", { text: strings.processModals.skipped });
 		this.skippedCountDisplay = countsDisplay.createEl("span");
 
 		// Warning message
 		headerContainer.createEl("p", {
 			cls: "modal-warning",
 			 
-			text: "⚠️ This will modify all images in the current note — please ensure you have backups.",
+			text: strings.processModals.warningModifiesImages,
 		});
 
 		// --- Settings Container ---
@@ -111,15 +112,15 @@ export class ProcessCurrentNote extends Modal {
 
 		// Convert To setting
 		this.convertToSetting = new Setting(formatQualityContainer)
-			.setName("Convert to ⓘ ")
-			.setDesc("Choose output format for your images")
+			.setName(strings.processModals.convertTo)
+			.setDesc(strings.processModals.chooseOutputFormat)
 			.setTooltip(
-				"Same as original: preserves current format while applying compression/resizing",
+				strings.processModals.chooseOutputFormatTooltip,
 			)
 			.addDropdown((dropdown) =>
 				dropdown
 					.addOptions({
-						disabled: "Same as original",
+						disabled: strings.processModals.sameAsOriginal,
 						webp: "WebP",
 						jpg: "JPG",
 						png: "PNG",
@@ -135,14 +136,14 @@ export class ProcessCurrentNote extends Modal {
 
 		// Quality setting
 		new Setting(formatQualityContainer)
-			.setName("Quality ⓘ")
-			.setDesc("Compression level (0-100)")
+			.setName(strings.processModals.quality)
+			.setDesc(strings.processModals.compressionLevel)
 			.setTooltip(
-				"100: no compression (original quality)\n75: recommended (good balance)\n0-50: high compression (lower quality)",
+				strings.processModals.compressionLevelTooltip,
 			)
 			.addText((text) =>
 				text
-					.setPlaceholder("Enter quality (0-100)")
+					.setPlaceholder(strings.processModals.enterQuality)
 					.setValue(
 						(
 							this.plugin.settings.ProcessCurrentNotequality * 100
@@ -169,24 +170,24 @@ export class ProcessCurrentNote extends Modal {
 
 		// Resize Mode setting
 		this.resizeModeSetting = new Setting(resizeContainer)
-			.setName("Resize mode ⓘ")
+			.setName(strings.processModals.resizeMode)
 			.setDesc(
-				"Choose how images should be resized - results are permanent.",
+				strings.processModals.resizeModeDesc,
 			)
-			 
+
 			.setTooltip(
-				"Fit: maintains aspect ratio within dimensions\nFill: exactly matches dimensions\nLongest edge: limits the longest side\nShortest edge: limits the shortest side\nWidth/height: constrains single dimension",
+				strings.processModals.resizeModeTooltip,
 			)
 			.addDropdown((dropdown) =>
 				dropdown
 					.addOptions({
-						None: "None",
-						LongestEdge: "Longest edge",
-						ShortestEdge: "Shortest edge",
-						Width: "Width",
-						Height: "Height",
-						Fit: "Fit",
-						Fill: "Fill",
+						None: strings.processModals.resizeModeNone,
+						LongestEdge: strings.processModals.resizeModeLongestEdge,
+						ShortestEdge: strings.processModals.resizeModeShortestEdge,
+						Width: strings.processModals.resizeModeWidth,
+						Height: strings.processModals.resizeModeHeight,
+						Fit: strings.processModals.resizeModeFit,
+						Fill: strings.processModals.resizeModeFill,
 					})
 					.setValue(
 						this.plugin.settings
@@ -216,14 +217,14 @@ export class ProcessCurrentNote extends Modal {
 
 		// Skip formats setting
 		this.skipFormatsSetting = new Setting(skipContainer)
-			.setName("Skip file formats ⓘ")
+			.setName(strings.processModals.skipFormats)
 			.setTooltip(
-				"Comma-separated list of file formats to skip (e.g., tif,tiff,heic). Leave empty to process all formats.",
+				strings.processModals.skipFormatsTooltip,
 			)
 			.addText((text) =>
 				text
-					 
-					.setPlaceholder("e.g., tif, tiff, heic")
+
+					.setPlaceholder(strings.processModals.skipFormatsPlaceholderExample)
 					.setValue(
 						this.plugin.settings.ProcessCurrentNoteSkipFormats,
 					)
@@ -238,12 +239,12 @@ export class ProcessCurrentNote extends Modal {
 		// Ignore folders setting
 		new Setting(skipContainer)
 			.setClass("image-converter-ignore-folders-setting")
-			.setName("Skip folders ⓘ")
+			.setName(strings.processModals.skipFolders)
 			.setTooltip(
-				"Comma-separated folder patterns to exclude images from processing.",
+				strings.processModals.skipFoldersTooltip,
 			)
 			.addText((text) => {
-				text.setPlaceholder("e.g., _attachments, images/**")
+				text.setPlaceholder(strings.processModals.skipFoldersPlaceholder)
 					.setValue(
 						this.plugin.settings.ProcessCurrentNoteIgnoreFolders,
 					)
@@ -263,7 +264,7 @@ export class ProcessCurrentNote extends Modal {
 			cls: "image-converter-ignore-folders-help",
 		});
 		helpDetails.createEl("summary", {
-			text: "Show examples and how matching works",
+			text: strings.processModals.showExamples,
 			cls: "image-converter-ignore-folders-help-summary",
 		});
 
@@ -272,30 +273,30 @@ export class ProcessCurrentNote extends Modal {
 		});
 
 		helpContent.createDiv({
-			text: "How matching works:",
+			text: strings.processModals.howMatchingWorks,
 			attr: { style: "font-weight: bold; margin: 8px 0 4px 0;" },
 		});
 		const behaviorList = helpContent.createEl("ul", {
 			attr: { style: "margin: 4px 0; padding-left: 20px;" },
 		});
 		behaviorList.createEl("li", {
-			text: "Folder paths without wildcards skip that folder and all subfolders",
+			text: strings.processModals.helpFolderPathsNoWildcards,
 		});
 		behaviorList.createEl("li", {
-			text: "Leading / is optional",
+			text: strings.processModals.helpLeadingSlash,
 		});
 		behaviorList.createEl("li", {
-			text: "Use * to match only direct children",
+			text: strings.processModals.helpUseStar,
 		});
 		behaviorList.createEl("li", {
-			text: "Use ** to include subfolders too",
+			text: strings.processModals.helpUseDoubleStar,
 		});
 		behaviorList.createEl("li", {
-			text: "Regex is supported for advanced patterns",
+			text: strings.processModals.helpRegexSupported,
 		});
 
 		helpContent.createDiv({
-			text: "Examples:",
+			text: strings.processModals.helpExamples,
 			attr: { style: "font-weight: bold; margin-bottom: 4px;" },
 		});
 
@@ -322,7 +323,7 @@ export class ProcessCurrentNote extends Modal {
 		});
 
 		helpContent.createDiv({
-			text: "Advanced (regex):",
+			text: strings.processModals.helpAdvancedRegex,
 			attr: { style: "font-weight: bold; margin-bottom: 4px;" },
 		});
 
@@ -341,9 +342,9 @@ export class ProcessCurrentNote extends Modal {
 
 		// Skip target format setting
 		this.skipTargetFormatSetting = new Setting(skipContainer)
-			.setName("Skip images in target format ⓘ")
+			.setName(strings.processModals.skipImagesInTargetFormat)
 			.setTooltip(
-				"If image is already in target format, this allows you to skip its compression, conversion and resizing. Processing of all other formats will be still performed.",
+				strings.processModals.skipTargetFormatTooltip,
 			)
 			.addToggle((toggle) =>
 				toggle
@@ -372,7 +373,7 @@ export class ProcessCurrentNote extends Modal {
 			cls: "button-container",
 		});
 		this.submitButton = new ButtonComponent(buttonContainer)
-			.setButtonText("Submit")
+			.setButtonText(strings.processModals.submit)
 			.onClick(async () => {
 				// Use async here
 				this.close();
@@ -387,7 +388,7 @@ export class ProcessCurrentNote extends Modal {
 				} else {
 					 
 					new Notice(
-						"Error: active file must be a markdown or canvas file.",
+						strings.processModals.errorActiveFileMustBeMarkdownOrCanvas,
 					);
 				}
 			});
@@ -421,16 +422,16 @@ export class ProcessCurrentNote extends Modal {
 
         this.enlargeReduceSettings = new Setting(this.enlargeReduceDiv)
             .setClass('enlarge-reduce-setting')
-            .setName('Enlarge or reduce ⓘ')
-            .setDesc('Controls how images are adjusted relative to target size:')
-             
-            .setTooltip('• Reduce and enlarge: adjusts all images to fit specified dimensions\n• Reduce only: only shrinks images larger than target\n• Enlarge only: only enlarges images smaller than target')
+            .setName(strings.processModals.enlargeOrReduce)
+            .setDesc(strings.processModals.enlargeOrReduceDesc)
+
+            .setTooltip(strings.processModals.enlargeOrReduceTooltip)
             .addDropdown((dropdown) => {
                 dropdown
                     .addOptions({
-                        Always: 'Reduce and enlarge',
-                        Reduce: 'Reduce only',
-                        Enlarge: 'Enlarge only',
+                        Always: strings.processModals.enlargeOrReduceAlways,
+                        Reduce: strings.processModals.enlargeOrReduceReduce,
+                        Enlarge: strings.processModals.enlargeOrReduceEnlarge,
                     })
                     .setValue(this.plugin.settings.ProcessCurrentNoteEnlargeOrReduce)
                     .onChange(async (value: 'Always' | 'Reduce' | 'Enlarge') => {
@@ -462,13 +463,13 @@ export class ProcessCurrentNote extends Modal {
         let desc = '';
 
         if (['Fit', 'Fill'].includes(resizeMode)) {
-            name = 'Resize dimensions';
-            desc = 'Enter the desired width and height in pixels';
+            name = strings.processModals.resizeDimensions;
+            desc = strings.processModals.enterWidthHeight;
             this.resizeInputSettings
                 .setName(name)
                 .setDesc(desc)
                 .addText((text: TextComponent) => text
-                    .setPlaceholder('Width')
+                    .setPlaceholder(strings.processModals.width)
                     .setValue(this.plugin.settings.ProcessCurrentNoteresizeModaldesiredWidth.toString())
                     .onChange(async (value: string) => {
                         const width = parseInt(value);
@@ -478,7 +479,7 @@ export class ProcessCurrentNote extends Modal {
                         }
                     }))
                 .addText((text: TextComponent) => text
-                    .setPlaceholder('Height')
+                    .setPlaceholder(strings.processModals.height)
                     .setValue(this.plugin.settings.ProcessCurrentNoteresizeModaldesiredHeight.toString())
                     .onChange(async (value: string) => {
                         const height = parseInt(value);
@@ -492,15 +493,15 @@ export class ProcessCurrentNote extends Modal {
                 case 'LongestEdge':
                 case 'ShortestEdge':
                     name = `${resizeMode}`;
-                    desc = 'Enter the desired length in pixels';
+                    desc = strings.processModals.enterLength;
                     break;
                 case 'Width':
-                    name = 'Width';
-                    desc = 'Enter the desired width in pixels';
+                    name = strings.processModals.width;
+                    desc = strings.processModals.enterWidth;
                     break;
                 case 'Height':
-                    name = 'Height';
-                    desc = 'Enter the desired height in pixels';
+                    name = strings.processModals.height;
+                    desc = strings.processModals.enterHeight;
                     break;
             }
 

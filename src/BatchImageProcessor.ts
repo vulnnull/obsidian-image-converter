@@ -218,13 +218,13 @@ export class BatchImageProcessor {
                 } finally {
                     const elapsedTime = ((Date.now() - startTime) / 1000).toFixed(2);
                     statusBarItemEl.setText(
-                        `Processing image ${imageCount} of ${totalImages}, elapsed time: ${elapsedTime} seconds`
+                        t(strings.batchProcessing.processingImageStatus, { imageCount: imageCount.toString(), totalImages: totalImages.toString(), elapsedTime })
                     );
                 }
             }
 
             const totalTime = ((Date.now() - startTime) / 1000).toFixed(2);
-            statusBarItemEl.setText(`Finished processing ${imageCount} images, total time: ${totalTime} seconds`);
+            statusBarItemEl.setText(t(strings.batchProcessing.finishedProcessingStatus, { imageCount: imageCount.toString(), totalTime }));
             window.setTimeout(() => {
                 statusBarItemEl.remove();
             }, 5000);
@@ -383,13 +383,13 @@ export class BatchImageProcessor {
                 } finally {
                     const elapsedTime = ((Date.now() - startTime) / 1000).toFixed(2);
                     statusBarItemEl.setText(
-                        `Processing image ${imageCount} of ${totalImages}, elapsed time: ${elapsedTime} seconds`
+                        t(strings.batchProcessing.processingImageStatus, { imageCount: imageCount.toString(), totalImages: totalImages.toString(), elapsedTime })
                     );
                 }
             }
 
             const totalTime = ((Date.now() - startTime) / 1000).toFixed(2);
-            statusBarItemEl.setText(`Finished processing ${imageCount} images, total time: ${totalTime} seconds`);
+            statusBarItemEl.setText(t(strings.batchProcessing.finishedProcessingStatus, { imageCount: imageCount.toString(), totalTime }));
             window.setTimeout(() => {
                 statusBarItemEl.remove();
             }, 5000);
@@ -579,12 +579,12 @@ export class BatchImageProcessor {
                     new Notice(t(strings.batchProcessing.errorProcessingImage, { fileName: image.name, errorMessage: this.getErrorMessage(error) }));
                 } finally {
                     const elapsedTime = ((Date.now() - startTime) / 1000).toFixed(2);
-                    statusBarItemEl.setText(`Processing image ${imageCount} of ${totalImages}, elapsed time: ${elapsedTime} seconds`);
+                    statusBarItemEl.setText(t(strings.batchProcessing.processingImageStatus, { imageCount: imageCount.toString(), totalImages: totalImages.toString(), elapsedTime }));
                 }
             }
 
             const totalTime = ((Date.now() - startTime) / 1000).toFixed(2);
-            statusBarItemEl.setText(`Finished processing ${imageCount} images, total time: ${totalTime} seconds`);
+            statusBarItemEl.setText(t(strings.batchProcessing.finishedProcessingStatus, { imageCount: imageCount.toString(), totalTime }));
             window.setTimeout(() => { statusBarItemEl.remove(); }, 5000);
         } catch (error) {
             console.error('Error processing linked images in folder:', error);
@@ -685,7 +685,7 @@ export class BatchImageProcessor {
 
             if (filesToProcess.length === 0) {
                 if (skipTargetFormat) {
-                    new Notice(`No processing needed: All vault images are either in ${isKeepOriginalFormat ? 'their original' : targetFormat.toUpperCase()} format or in skip list.`);
+                    new Notice(t(strings.batchProcessing.noProcessingNeededAllVaultAlreadyInFormatSkipList, { format: isKeepOriginalFormat ? 'their original' : targetFormat.toUpperCase() }));
                 } else {
                     new Notice(strings.batchProcessing.noImagesFoundNeedProcessing);
                 }
@@ -775,14 +775,14 @@ export class BatchImageProcessor {
                 } finally {
                     const elapsedTime = ((Date.now() - startTime) / 1000).toFixed(2);
                     statusBarItemEl.setText(
-                        `Processing image ${imageCount} of ${totalImages}, elapsed time: ${elapsedTime} seconds`
+                        t(strings.batchProcessing.processingImageStatus, { imageCount: imageCount.toString(), totalImages: totalImages.toString(), elapsedTime })
                     );
                 }
             }
 
             const totalTime = ((Date.now() - startTime) / 1000).toFixed(2);
             statusBarItemEl.setText(
-                `Finished processing ${imageCount} images, total time: ${totalTime} seconds`
+                t(strings.batchProcessing.finishedProcessingStatus, { imageCount: imageCount.toString(), totalTime })
             );
             window.setTimeout(() => {
                 statusBarItemEl.remove();

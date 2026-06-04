@@ -41,7 +41,7 @@ export class ProcessSingleImageModal extends Modal {
         super(app);
         this.imageFile = file;
         this.loadModalSettings();
-        this.titleEl.setText(`Process Image: ${file.name}`);
+        this.titleEl.setText(t(strings.processModals.processImageTitle, { fileName: file.name }));
     }
 
     private loadModalSettings() {
@@ -131,17 +131,16 @@ export class ProcessSingleImageModal extends Modal {
         );
 
         new Setting(this.conversionSettingsContainer)
-            // eslint-disable-next-line obsidianmd/ui/sentence-case
-            .setName("Output Format")
+            .setName(strings.processModals.outputFormat)
             .addDropdown(dropdown => {
                 const options: Record<OutputFormat, string> = {
                     "WEBP": "WEBP",
                     "JPEG": "JPEG",
                     "PNG": "PNG",
-                    "ORIGINAL": "Original (Compress)",
-                    "NONE": "None (No Conversion)",
-                    "PNGQUANT": "pngquant (PNG Only)",
-                    "AVIF": "AVIF (via ffmpeg)"
+                    "ORIGINAL": strings.processModals.outputFormatOriginal,
+                    "NONE": strings.processModals.outputFormatNone,
+                    "PNGQUANT": strings.processModals.outputFormatPngquant,
+                    "AVIF": strings.processModals.outputFormatAvif
                 };
                 Object.entries(options).forEach(([key, value]) => {
                     dropdown.addOption(key, value);
@@ -162,7 +161,7 @@ export class ProcessSingleImageModal extends Modal {
 
         if (["WEBP", "JPEG", "ORIGINAL"].includes(this.modalSettings.outputFormat)) {
             new Setting(this.conversionSettingsContainer)
-                .setName("Quality")
+                .setName(strings.processModals.qualityLabel)
                 .addSlider(slider => {
                     slider.setLimits(1, 100, 1)
                         .setValue(this.modalSettings.quality)
@@ -176,7 +175,7 @@ export class ProcessSingleImageModal extends Modal {
 
         if (this.modalSettings.outputFormat === "PNG") {
             new Setting(this.conversionSettingsContainer)
-                .setName("Color depth")
+                .setName(strings.processModals.colorDepth)
                 .addSlider(slider => {
                     slider.setLimits(0, 1, 0.1)
                         .setValue(this.modalSettings.colorDepth)
@@ -190,8 +189,8 @@ export class ProcessSingleImageModal extends Modal {
 
         if (this.modalSettings.outputFormat === "PNGQUANT") {
             new Setting(this.conversionSettingsContainer)
-                .setName("Executable path for pngquant")
-                .then((setting) => addInfoIcon(setting, "Provide full-path to the binary file. It can be inside vault or anywhere in your file system."))
+                .setName(strings.processModals.executablePathForPngquant)
+                .then((setting) => addInfoIcon(setting, strings.processModals.executablePathForPngquantInfo))
                 .addText(text => {
                     text.setValue(this.modalSettings.pngquantExecutablePath)
                         .onChange(async value => {
@@ -205,8 +204,8 @@ export class ProcessSingleImageModal extends Modal {
                 });
 
             new Setting(this.conversionSettingsContainer)
-                .setName("Quality min-max range")
-                .then((setting) => addInfoIcon(setting, "Instructs pngquant to use the least amount of colors required to meet or exceed the max quality. min and max are numbers in range 0 (worst) to 100 (perfect)."))
+                .setName(strings.processModals.pngquantQualityRange)
+                .then((setting) => addInfoIcon(setting, strings.processModals.pngquantQualityRangeInfo))
                 .addText(text => {
                     text.setValue(this.modalSettings.pngquantQuality)
                         .onChange(async value => {
@@ -344,14 +343,13 @@ export class ProcessSingleImageModal extends Modal {
             };
 
             new Setting(this.conversionSettingsContainer)
-                // eslint-disable-next-line obsidianmd/ui/sentence-case
-                .setName("FFmpeg executable path")
-                .then((setting) => addInfoIcon(setting, "Provide full-path to the binary file. It can be inside vault or anywhere in your file system."))
+                .setName(strings.processModals.ffmpegExecutablePath)
+                .then((setting) => addInfoIcon(setting, strings.processModals.ffmpegExecutablePathInfo))
                 .addButton(button => {
                     button
                         .setIcon("search")
                         // eslint-disable-next-line obsidianmd/ui/sentence-case
-                        .setTooltip("Auto-detect FFmpeg")
+                        .setTooltip(strings.processModals.autoDetectFfmpeg)
                         .onClick(async () => {
                             button.setDisabled(true);
                             try {
@@ -386,13 +384,12 @@ export class ProcessSingleImageModal extends Modal {
                 });
 
             const encoderDetectionSetting = new Setting(this.conversionSettingsContainer)
-                .setName("Encoder detection")
-                // eslint-disable-next-line obsidianmd/ui/sentence-case
-                .setDesc("Detect and validate working AV1 encoder by running a test encode. This ensures hardware encoders are actually available on your system.")
+                .setName(strings.processModals.encoderDetection)
+                .setDesc(strings.processModals.encoderDetectionInfo)
                 .addButton(button => {
                     encoderDetectionButtonEl = button.buttonEl;
                     button
-                        .setButtonText("Detect encoder")
+                        .setButtonText(strings.processModals.detectEncoderButton)
                         .setCta()
                         .onClick(async () => {
                             if (!this.modalSettings.ffmpegExecutablePath) {
@@ -401,7 +398,7 @@ export class ProcessSingleImageModal extends Modal {
                                 return;
                             }
 
-                            button.setButtonText("Validating...");
+                            button.setButtonText(strings.processModals.validating);
                             button.setDisabled(true);
 
                             try {
@@ -439,17 +436,15 @@ export class ProcessSingleImageModal extends Modal {
                                 console.error("Encoder detection error:", error);
                                 new Notice(t(strings.settings.errorDetectingEncoder, { errorMessage: error instanceof Error ? error.message : String(error) }));
                             } finally {
-                                button.setButtonText("Detect encoder");
+                                button.setButtonText(strings.processModals.detectEncoderButton);
                                 button.setDisabled(false);
                             }
                         });
                 });
 
             const crfSetting = new Setting(this.conversionSettingsContainer)
-                // eslint-disable-next-line obsidianmd/ui/sentence-case
-                .setName("FFmpeg CRF")
-                // eslint-disable-next-line obsidianmd/ui/sentence-case
-                .setDesc("Constant rate factor for AVIF (0-63, lower is better quality). Range varies by encoder - click 'Detect encoder' to see the specific range.")
+                .setName(strings.processModals.ffmpegCrf)
+                .setDesc(strings.processModals.ffmpegCrfInfo)
                 .addText((text) => {
                     text.setValue(this.modalSettings.ffmpegCrf?.toString() || "")
                         .onChange(value => {
@@ -475,10 +470,8 @@ export class ProcessSingleImageModal extends Modal {
                 });
 
             const presetSetting = new Setting(this.conversionSettingsContainer)
-                // eslint-disable-next-line obsidianmd/ui/sentence-case
-                .setName("FFmpeg preset")
-                // eslint-disable-next-line obsidianmd/ui/sentence-case
-                .setDesc("Encoding preset (speed vs. compression).")
+                .setName(strings.processModals.ffmpegPreset)
+                .setDesc(strings.processModals.ffmpegPresetInfo)
                 .addDropdown(dropdown => {
                     dropdown.addOptions(
                         defaultPresetNames.reduce((options, presetName) => ({
@@ -520,17 +513,16 @@ export class ProcessSingleImageModal extends Modal {
         this.resizeSettingsContainer.empty();
 
         new Setting(this.resizeSettingsContainer)
-            // eslint-disable-next-line obsidianmd/ui/sentence-case
-            .setName("Resize Mode")
+            .setName(strings.processModals.resizeModeLabel)
             .addDropdown(dropdown => {
                 const resizeOptions: Record<ResizeMode, string> = {
-                    "None": "None",
-                    "Fit": "Fit",
-                    "Fill": "Fill",
-                    "LongestEdge": "Longest Edge",
-                    "ShortestEdge": "Shortest Edge",
-                    "Width": "Width",
-                    "Height": "Height",
+                    "None": strings.processModals.resizeModeNone,
+                    "Fit": strings.processModals.resizeModeFit,
+                    "Fill": strings.processModals.resizeModeFill,
+                    "LongestEdge": strings.processModals.resizeModeLongestEdge,
+                    "ShortestEdge": strings.processModals.resizeModeShortestEdge,
+                    "Width": strings.processModals.resizeModeWidth,
+                    "Height": strings.processModals.resizeModeHeight,
                 };
                 Object.entries(resizeOptions).forEach(([key, value]) => {
                     dropdown.addOption(key, value);
@@ -547,8 +539,7 @@ export class ProcessSingleImageModal extends Modal {
              //Consolidate all text inputs that effect the generate preview function
               if (["Fit", "Fill", "Width"].includes(this.modalSettings.resizeMode)){
                 new Setting(this.resizeSettingsContainer)
-                // eslint-disable-next-line obsidianmd/ui/sentence-case
-                .setName("Desired Width")
+                .setName(strings.processModals.desiredWidth)
                 .addText(text => {
                     text.setValue(this.modalSettings.desiredWidth.toString())
                         .onChange(async (value) => {
@@ -562,8 +553,7 @@ export class ProcessSingleImageModal extends Modal {
               }
             if (["Fit", "Fill", "Height"].includes(this.modalSettings.resizeMode)) {
                 new Setting(this.resizeSettingsContainer)
-                    // eslint-disable-next-line obsidianmd/ui/sentence-case
-                    .setName("Desired Height")
+                    .setName(strings.processModals.desiredHeight)
                     .addText(text => {
                         text.setValue(this.modalSettings.desiredHeight.toString())
                             .onChange(async (value) => {
@@ -578,7 +568,7 @@ export class ProcessSingleImageModal extends Modal {
 
             if (["LongestEdge", "ShortestEdge"].includes(this.modalSettings.resizeMode)) {
                 new Setting(this.resizeSettingsContainer)
-                    .setName(this.modalSettings.resizeMode === "LongestEdge" ? "Desired Longest Edge" : "Desired Shortest Edge")
+                    .setName(this.modalSettings.resizeMode === "LongestEdge" ? strings.processModals.desiredLongestEdge : strings.processModals.desiredShortestEdge)
                     .addText(text => {
                         text.setValue(this.modalSettings.desiredLongestEdge.toString())
                             .onChange(async (value) => {
@@ -592,13 +582,12 @@ export class ProcessSingleImageModal extends Modal {
             }
 
             new Setting(this.resizeSettingsContainer)
-                // eslint-disable-next-line obsidianmd/ui/sentence-case
-                .setName("Enlarge/Reduce")
+                .setName(strings.processModals.enlargeOrReduceLabel)
                 .addDropdown(dropdown => {
                     const enlargeReduceOptions: Record<EnlargeReduce, string> = {
-                        "Auto": "Auto",
-                        "Reduce": "Only Reduce",
-                        "Enlarge": "Only Enlarge",
+                        "Auto": strings.processModals.enlargeOrReduceAlways,
+                        "Reduce": strings.processModals.enlargeOrReduceReduce,
+                        "Enlarge": strings.processModals.enlargeOrReduceEnlarge,
                     };
                     Object.entries(enlargeReduceOptions).forEach(([key, value]) => {
                         dropdown.addOption(key, value);
@@ -618,12 +607,12 @@ export class ProcessSingleImageModal extends Modal {
         this.buttonContainer.empty();
         new Setting(this.buttonContainer)
             .addButton(button => {
-                button.setButtonText("Process")
+                button.setButtonText(strings.processModals.process)
                     .setCta()
                     .onClick(() => this.processImage());
             })
             .addButton(button => {
-                button.setButtonText("Cancel")
+                button.setButtonText(strings.processModals.cancel)
                     .onClick(() => this.close());
             });
     }
@@ -634,12 +623,12 @@ export class ProcessSingleImageModal extends Modal {
         //  Skip preview for PNGQUANT and AVIF
         if (this.modalSettings.outputFormat === "PNGQUANT" || this.modalSettings.outputFormat === "AVIF") {
             this.previewContainer.empty();
-            this.previewContainer.createEl("p", { text: "Preview not available for this format." });
+            this.previewContainer.createEl("p", { text: strings.processModals.previewNotAvailable });
             return;
         }
 
         this.previewContainer.empty();
-        const loadingEl = this.previewContainer.createEl("p", { text: "Generating preview..." });
+        const loadingEl = this.previewContainer.createEl("p", { text: strings.processModals.generatingPreview });
 
         try {
             const fileBuffer = await this.app.vault.readBinary(this.imageFile);
@@ -682,7 +671,7 @@ export class ProcessSingleImageModal extends Modal {
             loadingEl.remove();
 
         } catch (error) {
-            loadingEl.setText(`Preview failed: ${this.getErrorMessage(error)}`);
+            loadingEl.setText(`${strings.presetSelection.errorGeneratingPreview}: ${this.getErrorMessage(error)}`);
             console.error("Preview generation failed:", error);
         }
     }
@@ -713,7 +702,7 @@ export class ProcessSingleImageModal extends Modal {
 
             // Skip if the conversion is not needed
             if (this.modalSettings.outputFormat === "NONE" && this.modalSettings.resizeMode === "None") {
-                new Notice(`No processing needed for "${this.imageFile.name}".`, 1000);
+                new Notice(t(strings.processModals.noProcessingNeeded, { fileName: this.imageFile.name }), 1000);
                 this.close();
                 return;
             }
@@ -861,7 +850,7 @@ export class ProcessSingleImageModal extends Modal {
         } catch (error) {
             console.error("Error processing image:", error);
             new Notice(
-                `Failed to process image "${this.imageFile.name}" (target: ${this.modalSettings.outputFormat}): ${this.getErrorMessage(error)}`,
+                t(strings.processModals.failedToProcessImageGeneric, { fileName: this.imageFile.name, format: this.modalSettings.outputFormat, message: this.getErrorMessage(error) }),
                 2000
             );
         }

@@ -7,6 +7,7 @@ import {
 } from "obsidian";
 import ImageConverterPlugin from "./main";
 import { BatchImageProcessor } from "./BatchImageProcessor";
+import { strings } from "./i18n";
 
 export class ProcessAllVaultModal extends Modal {
     private enlargeReduceSettings: Setting | null = null;
@@ -71,10 +72,10 @@ export class ProcessAllVaultModal extends Modal {
     private createHeader(contentEl: HTMLElement) {
         const headerContainer = contentEl.createDiv({ cls: "modal-header" });
         headerContainer.createEl("h2", {
-            text: "Convert, compress and resize all images",
+            text: strings.processModals.convertCompressResizeAllImages,
         });
         headerContainer.createEl("h6", {
-            text: "In the vault",
+            text: strings.processModals.inTheVault,
             cls: "modal-subtitle",
         });
     }
@@ -82,23 +83,22 @@ export class ProcessAllVaultModal extends Modal {
     private createWarningMessage(contentEl: HTMLElement) {
         contentEl.createEl("p", {
             cls: "modal-warning",
-            // eslint-disable-next-line obsidianmd/ui/sentence-case -- Warning icon improves visibility
-            text: "⚠️ This will modify all images in the vault. Please ensure you have backups.",
+            text: strings.processModals.warningModifiesAllVault,
         });
     }
 
     private createGeneralSettings(contentEl: HTMLElement) {
         new Setting(contentEl)
-            .setName("Convert to ⓘ")
+            .setName(strings.processModals.convertTo)
             .setDesc(
-                "Choose output format. Same as original applies compression/resizing to current format"
+                strings.processModals.chooseOutputFormat
             )
             .setTooltip(
-                "Same as original: preserves current format while applying compression/resizing"
+                strings.processModals.chooseOutputFormatTooltip
             )
             .addDropdown((dropdown) => {
                 dropdown
-                    .addOption("disabled", "Same as original")
+                    .addOption("disabled", strings.processModals.sameAsOriginal)
                     .addOptions({
                         webp: "WebP",
                         jpg: "JPG",
@@ -112,14 +112,14 @@ export class ProcessAllVaultModal extends Modal {
             });
 
         new Setting(contentEl)
-            .setName("Quality ⓘ")
-            .setDesc("Compression level (0-100)")
+            .setName(strings.processModals.quality)
+            .setDesc(strings.processModals.compressionLevel)
             .setTooltip(
-                "100: no compression (original quality)\n75: recommended (good balance)\n0-50: high compression (lower quality)"
+                strings.processModals.compressionLevelTooltip
             )
             .addText((text) => {
                 text
-                    .setPlaceholder("Enter quality (0-100)")
+                    .setPlaceholder(strings.processModals.enterQuality)
                     .setValue(
                         (
                             this.plugin.settings.ProcessAllVaultquality * 100
@@ -142,24 +142,23 @@ export class ProcessAllVaultModal extends Modal {
 
     private createResizeSettings(contentEl: HTMLElement) {
         new Setting(contentEl)
-            .setName("Resize mode ⓘ")
+            .setName(strings.processModals.resizeMode)
             .setDesc(
-                "Choose how images should be resized. Note: results are permanent"
+                strings.processModals.resizeModeDesc
             )
             .setTooltip(
-                // eslint-disable-next-line obsidianmd/ui/sentence-case -- Structured tooltip format
-                "Fit: Maintains aspect ratio within dimensions\nFill: Exactly matches dimensions\nLongest edge: Limits the longest side\nShortest edge: Limits the shortest side\nWidth/Height: Constrains single dimension"
+                strings.processModals.resizeModeTooltip
             )
             .addDropdown((dropdown) => {
                 dropdown
                     .addOptions({
-                        None: "None",
-                        Fit: "Fit",
-                        Fill: "Fill",
-                        LongestEdge: "Longest edge",
-                        ShortestEdge: "Shortest edge",
-                        Width: "Width",
-                        Height: "Height",
+                        None: strings.processModals.resizeModeNone,
+                        Fit: strings.processModals.resizeModeFit,
+                        Fill: strings.processModals.resizeModeFill,
+                        LongestEdge: strings.processModals.resizeModeLongestEdge,
+                        ShortestEdge: strings.processModals.resizeModeShortestEdge,
+                        Width: strings.processModals.resizeModeWidth,
+                        Height: strings.processModals.resizeModeHeight,
                     })
                     .setValue(
                         this.plugin.settings
@@ -185,18 +184,16 @@ export class ProcessAllVaultModal extends Modal {
 
     private createSkipSettings(contentEl: HTMLElement) {
         new Setting(contentEl)
-            .setName("Skip formats ⓘ")
+            .setName(strings.processModals.skipFormats)
             .setDesc(
-                // eslint-disable-next-line obsidianmd/ui/sentence-case -- Example format aids clarity
-                "Comma-separated list (no dots or spaces). Example: png,gif"
+                strings.processModals.skipFormatsDesc
             )
             .setTooltip(
-                "Comma-separated list of file formats to skip (e.g., tif,tiff,heic). Leave empty to process all formats."
+                strings.processModals.skipFormatsTooltip
             )
             .addText((text) => {
                 text.setPlaceholder(
-                    // eslint-disable-next-line obsidianmd/ui/sentence-case -- Example format
-                    "Example: png,gif"
+                    strings.processModals.skipFormatsPlaceholder
                 )
                     .setValue(this.plugin.settings.ProcessAllVaultSkipFormats)
                     .onChange(async (value) => {
@@ -206,12 +203,12 @@ export class ProcessAllVaultModal extends Modal {
             });
 
         new Setting(contentEl)
-            .setName("Skip images in target format ⓘ")
+            .setName(strings.processModals.skipImagesInTargetFormat)
             .setDesc(
-                "Skip compression/resizing if image is already in target format."
+                strings.processModals.skipTargetFormatDesc
             )
             .setTooltip(
-                "If image is already in target format, this allows you to skip its compression, conversion and resizing. Processing of all other formats will be still performed."
+                strings.processModals.skipTargetFormatTooltip
             )
             .addToggle((toggle) => {
                 toggle
@@ -231,7 +228,7 @@ export class ProcessAllVaultModal extends Modal {
             cls: "button-container",
         });
         new ButtonComponent(buttonContainer)
-            .setButtonText("Process all images")
+            .setButtonText(strings.processModals.processAllImages)
             .setCta()
             .onClick(async () => {
                 this.close();
@@ -268,20 +265,19 @@ export class ProcessAllVaultModal extends Modal {
 
         this.enlargeReduceSettings = new Setting(this.enlargeReduceDiv)
             .setClass("enlarge-reduce-setting")
-            .setName("Enlarge or reduce ⓘ")
+            .setName(strings.processModals.enlargeOrReduce)
             .setDesc(
-                "Reduce and enlarge: adjusts all images. Reduce only: shrinks larger images. Enlarge only: enlarges smaller images"
+                strings.processModals.enlargeOrReduceDesc
             )
             .setTooltip(
-                // eslint-disable-next-line obsidianmd/ui/sentence-case -- Bullet list format
-                "• Reduce and enlarge: Adjusts all images to fit specified dimensions\n• Reduce only: Only shrinks images larger than target\n• Enlarge only: Only enlarges images smaller than target"
+                strings.processModals.enlargeOrReduceTooltip
             )
             .addDropdown((dropdown) => {
                 dropdown
                     .addOptions({
-                        Always: "Reduce and enlarge",
-                        Reduce: "Reduce only",
-                        Enlarge: "Enlarge only",
+                        Always: strings.processModals.enlargeOrReduceAlways,
+                        Reduce: strings.processModals.enlargeOrReduceReduce,
+                        Enlarge: strings.processModals.enlargeOrReduceEnlarge,
                     })
                     .setValue(
                         this.plugin.settings.ProcessAllVaultEnlargeOrReduce
@@ -317,14 +313,14 @@ export class ProcessAllVaultModal extends Modal {
         let desc = "";
 
         if (["Fit", "Fill"].includes(resizeMode)) {
-            name = "Resize dimensions";
-            desc = "Enter the desired width and height in pixels";
+            name = strings.processModals.resizeDimensions;
+            desc = strings.processModals.enterWidthHeight;
             this.resizeInputSettings
                 .setName(name)
                 .setDesc(desc)
                 .addText((text) =>
                     text
-                        .setPlaceholder("Width")
+                        .setPlaceholder(strings.processModals.width)
                         .setValue(
                             this.plugin.settings
                                 .ProcessAllVaultResizeModaldesiredWidth
@@ -341,7 +337,7 @@ export class ProcessAllVaultModal extends Modal {
                 )
                 .addText((text) =>
                     text
-                        .setPlaceholder("Height")
+                        .setPlaceholder(strings.processModals.height)
                         .setValue(
                             this.plugin.settings
                                 .ProcessAllVaultResizeModaldesiredHeight
@@ -361,15 +357,15 @@ export class ProcessAllVaultModal extends Modal {
                 case "LongestEdge":
                 case "ShortestEdge":
                     name = `${resizeMode}`;
-                    desc = "Enter the desired length in pixels";
+                    desc = strings.processModals.enterLength;
                     break;
                 case "Width":
-                    name = "Width";
-                    desc = "Enter the desired width in pixels";
+                    name = strings.processModals.width;
+                    desc = strings.processModals.width;
                     break;
                 case "Height":
-                    name = "Height";
-                    desc = "Enter the desired height in pixels";
+                    name = strings.processModals.height;
+                    desc = strings.processModals.height;
                     break;
             }
 

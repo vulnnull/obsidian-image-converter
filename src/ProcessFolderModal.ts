@@ -11,6 +11,7 @@ import {
     TextComponent,
     normalizePath
 } from "obsidian";
+import { strings } from "./i18n";
 import ImageConverterPlugin from './main';
 import { BatchImageProcessor } from './BatchImageProcessor';
 import { CanvasData } from './canvas-types';
@@ -219,7 +220,7 @@ export class ProcessFolderModal extends Modal {
 
         // --- Recursive Setting ---
         new Setting(contentEl)
-            .setName("Recursive")
+            .setName(strings.processModals.recursive)
             .setDesc("Process images in all subfolders as well")
             .addToggle((toggle) =>
                 toggle.setValue(this.recursive).onChange(async (value) => {
@@ -251,7 +252,7 @@ export class ProcessFolderModal extends Modal {
 
         // --- Create Radio Buttons ---
         new Setting(imageSourceSettingContainer)
-            .setName("Direct images")
+            .setName(strings.processModals.directImages)
             .setDesc("Images directly in the folder")
             .addExtraButton((button) => {
                 buttonRefs[ImageSource.DIRECT] = button;
@@ -279,7 +280,7 @@ export class ProcessFolderModal extends Modal {
             });
 
         new Setting(imageSourceSettingContainer)
-            .setName("Linked images")
+            .setName(strings.processModals.linkedImages)
             // eslint-disable-next-line obsidianmd/ui/sentence-case
             .setDesc("Images linked in notes or Canvas")
             .addExtraButton((button) => {
@@ -714,7 +715,7 @@ export class ProcessFolderModal extends Modal {
         const folder = this.app.vault.getAbstractFileByPath(this.folderPath);
         if (!(folder instanceof TFolder)) {
             // eslint-disable-next-line obsidianmd/ui/sentence-case
-            new Notice("Error: Invalid folder path.");
+            new Notice(strings.processModals.errorInvalidFolderPath);
             return { total: 0, processed: 0, skipped: 0 };
         }
 

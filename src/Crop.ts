@@ -139,7 +139,7 @@ export class Crop extends Modal {
 	
 		// Create modal structure
 		const modalHeader = modalWrapper.createDiv('crop-modal-header');
-		modalHeader.createEl('h2', { text: 'Crop image' });
+		modalHeader.createEl('h2', { text: strings.crop.header });
 	
 		// Create main container
 		const modalContent = modalWrapper.createDiv('crop-modal-content');
@@ -154,9 +154,9 @@ export class Crop extends Modal {
 	
 		// Create buttons - Move this inside modalWrapper
 		const buttonContainer = modalWrapper.createDiv('crop-modal-buttons');
-		const saveButton = buttonContainer.createEl('button', { text: 'Save' });
-		const cancelButton = buttonContainer.createEl('button', { text: 'Cancel' });
-		const resetButton = buttonContainer.createEl('button', { text: 'Reset' });
+		const saveButton = buttonContainer.createEl('button', { text: strings.crop.save });
+		const cancelButton = buttonContainer.createEl('button', { text: strings.crop.cancel });
+		const resetButton = buttonContainer.createEl('button', { text: strings.crop.reset });
 		
 		// Add aspect ratio controls
 		const aspectRatioContainer = modalHeader.createDiv('aspect-ratio-controls');
@@ -170,7 +170,7 @@ export class Crop extends Modal {
 
 		// Add preset ratio buttons
 		[
-			{ name: 'free', ratio: null, label: 'Free' },
+			{ name: 'free', ratio: null, label: strings.crop.free },
 			{ name: 'square', ratio: 1, label: '1:1' },
 			{ name: '16:9', ratio: 16/9, label: '16:9' },
 			{ name: '4:3', ratio: 4/3, label: '4:3' },
@@ -368,13 +368,13 @@ export class Crop extends Modal {
     const rotateLeftBtn = rotateContainer.createEl('button', {
 			cls: 'transform-button',
 			text: '↺',
-			attr: { title: '90° counter clockwise' }
+			attr: { title: strings.crop.rotate90CounterClockwise }
 		});
-		
+
 		const rotateRightBtn = rotateContainer.createEl('button', {
 			cls: 'transform-button',
 			text: '↻',
-			attr: { title: '90° clockwise' }
+			attr: { title: strings.crop.rotate90Clockwise }
 		});
 		
 		// Flip controls
@@ -383,13 +383,13 @@ export class Crop extends Modal {
 		const flipHorizontalBtn = flipContainer.createEl('button', {
 			cls: 'transform-button',
 			text: '↔',
-			attr: { title: 'Flip horizontally' }
+			attr: { title: strings.crop.flipHorizontally }
 		});
-		
+
 		const flipVerticalBtn = flipContainer.createEl('button', {
 			cls: 'transform-button',
 			text: '↕',
-			attr: { title: 'Flip vertically' }
+			attr: { title: strings.crop.flipVertically }
 		});
 		
 		// Add event listeners
@@ -422,7 +422,7 @@ export class Crop extends Modal {
 
 		// Rotation controls
 		const rotationContainer = controlsContainer.createDiv({ cls: 'control-group rotation-controls' });
-		rotationContainer.createEl('span', { text: 'Rotation: ', cls: 'control-label' });
+		rotationContainer.createEl('span', { text: strings.crop.rotation, cls: 'control-label' });
 
 		const rotationValue = rotationContainer.createEl('span', {
 			text: '0°',
@@ -442,7 +442,7 @@ export class Crop extends Modal {
 
 		// Zoom controls
 		const zoomContainer = controlsContainer.createDiv({ cls: 'control-group zoom-controls' });
-		zoomContainer.createEl('span', { text: 'Zoom: ', cls: 'control-label' });
+		zoomContainer.createEl('span', { text: strings.crop.zoom, cls: 'control-label' });
 
 		const zoomValue = zoomContainer.createEl('span', {
 			text: '100%',

@@ -766,7 +766,7 @@ export default class ImageConverterPlugin extends Plugin {
                         } catch (error) {
                             const errorMessage = error instanceof Error ? error.message : String(error);
                             console.error("Failed to insert link for skipped conversion:", errorMessage);
-                            new Notice(`Failed to insert link for "${file.name}". Check console for details.`);
+                            new Notice(t(strings.notices.failedToInsertLinkForSkippedConversion, { fileName: file.name }));
                         }
 
                     } else {
@@ -926,9 +926,9 @@ export default class ImageConverterPlugin extends Plugin {
                 showModal = await new Promise<boolean>((resolve) => {
                     new ConfirmDialog(
                         this.app,
-                        "Show Preset Selection Modal?",
-                        "Do you want to select presets for this image?",
-                        "Yes",
+                        strings.notices.showPresetSelectionModal,
+                        strings.notices.doYouWantToSelectPresetsForThisImage,
+                        strings.notices.yes,
                         () => resolve(true)
                     ).open();
                 });
@@ -1110,7 +1110,7 @@ export default class ImageConverterPlugin extends Plugin {
                         } catch (error) {
                             const errorMessage = error instanceof Error ? error.message : String(error);
                             console.error("Failed to insert link for skipped conversion:", errorMessage);
-                            new Notice(`Failed to insert link for "${file.name}". Check console for details.`);
+                            new Notice(t(strings.notices.failedToInsertLinkForSkippedConversion, { fileName: file.name }));
                         }
                     } else {
                         // Step 3.5.3: Process the Image (ONLY if not skipped)

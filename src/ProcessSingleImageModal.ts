@@ -309,16 +309,16 @@ export class ProcessSingleImageModal extends Modal {
 
             const resetEncoderUi = () => {
                 // eslint-disable-next-line obsidianmd/ui/sentence-case
-                encoderDetectionSetting.setDesc("Detect and validate working AV1 encoder by running a test encode. This ensures hardware encoders are actually available on your system.");
+                encoderDetectionSetting.setDesc(strings.settings.encoderDetectionDesc);
                 encoderDetectionSetting.settingEl.removeClass("image-converter-encoder-detected");
                 encoderDetectionButtonEl?.classList.remove("image-converter-encoder-detected");
                 crfSetting.settingEl.removeClass("image-converter-encoder-detected");
                 // eslint-disable-next-line obsidianmd/ui/sentence-case
-                crfSetting.setDesc("Constant rate factor for AVIF (0-63, lower is better quality). Range varies by encoder - click 'Detect encoder' to see the specific range.");
+                crfSetting.setDesc(strings.settings.ffmpegCrfDesc);
                 if (presetSelectEl) {
                     presetSetting.settingEl.show();
                     // eslint-disable-next-line obsidianmd/ui/sentence-case
-                    presetSetting.setDesc("Encoding preset (speed vs. compression).");
+                    presetSetting.setDesc(strings.settings.ffmpegPresetDesc);
                     presetSelectEl.innerHTML = "";
                     defaultPresetNames.forEach(presetName => {
                         const option = document.createElement("option");

@@ -458,6 +458,12 @@ export const en = {
 		maxWidthValue: "Max width value",
 		maintainAspectRatio: "Maintain aspect ratio",
 		respectEditorMaxWidth: "Respect editor max width",
+		// Descriptions
+		revertToOriginalIfLargerDesc: "If the processed image filesize is larger than the original, use the original image instead. Sometimes compression can increase file size, especially with certain formats or settings, but if you would prefer to always get smaller file sizes, enable this option.",
+		minimumCompressionSavingsDesc: "This option allows you to further specify, how much the file size must be reduced before compressing the image. Sometimes an image's size might shrink by only 3 KB, but the visible degradation in quality is significant. This option helps catch those cases and avoids compressing such images. Default is 30kb, which means if after compressing the image file size would reduce only by 30kb or less, then the original image bytes will be used instead. Set to 0 to always allow compression when the output is smaller.",
+		linkFormatDesc: "Choose between wikilink and Markdown format",
+		pathFormatDesc: "Choose how paths should be formatted",
+		resizeDimensionDesc: "Choose how to resize the image",
 		// Dropdown options
 		originalCompress: "Original (Compress)",
 		noneNoConversion: "None (No Conversion/Compression)",
@@ -476,11 +482,19 @@ export const en = {
 		sameFolderAsCurrentNote: "Same folder as current note",
 		keepOriginalName: "Keep original name",
 		noteNameTimestamp: "NoteName-Timestamp",
+		// New settings strings
+		editTooltip: "Edit",
+		deleteTooltip: "Delete",
+		showAvailableVariablesTooltip: "Show available variables",
+		autoDetectFfmpegTooltip: "Auto-detect FFmpeg",
+		setNewCustomWidth: "Set new custom width",
+		setNewCustomHeight: "Set new custom height",
+		longestEdgeDesc: "Plugin automatically reads the original image dimensions and applies the provided value to the longer of the width or height. The other dimension is then calculated automatically if 'maintain aspect ratio' is enabled.",
+		shortestEdgeDesc: "Plugin automatically reads the original image dimensions and applies the provided value to the shorter of the width or height. The other dimension is then calculated automatically if 'maintain aspect ratio' is enabled.",
+		customSizeDesc: "Set both width and height using the format |widthxheight (e.g., 300x200) or percentage format (e.g., 50x75). This does not preserve aspect ratio.",
+		maxWidthDesc: "Set the maximum width of the image to fit within the editor's width. You can specify a percentage or a fixed pixel value.",
+		noWorkingEncoderFound: "No working encoder found. Install FFmpeg with libaom-av1, libsvtav1, or ensure hardware drivers are installed.",
 	},
-
-	// ----------------------------------------------------------------
-	// Image processor (from ImageProcessor.ts)
-	// ----------------------------------------------------------------
 	imageProcessor: {
 		failedToProcessImage: 'Failed to process image "{filename}" (target: {format}): {message}',
 		pngquantPathNotSet: "The pngquant executable path is not set. Please configure it in the plugin settings.",

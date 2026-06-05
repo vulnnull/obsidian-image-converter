@@ -705,7 +705,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         // --- Dropdown ---
         new Setting(globalPresetContainer)
             // .setName(strings.settings.dropPastePresets)
-            .setDesc("Quickly apply a combination of presets")
+            .setDesc(strings.settings.dropPastePresetsDesc)
             .addDropdown((dropdown) => {
                 dropdown.addOption("", "None");
                 this.plugin.settings.globalPresets.forEach((preset) => {
@@ -852,7 +852,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         if (this.plugin.settings.isImageAlignmentEnabled) { // Conditionally render cleanup options
             new Setting(imageAlignmentSection)
                 .setName(strings.settings.defaultAlignmentForNewImages)
-                .setDesc("Automatically apply this alignment when inserting new images. Set to 'none' to disable.")
+                .setDesc(strings.settings.defaultAlignmentForNewImagesDesc)
                 .addDropdown(dropdown => dropdown
                     .addOptions({
                         'none': 'None',
@@ -980,8 +980,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             // --- Checkboxes for Drag and Scroll Resize ---
             new Setting(imageDragResizeSection)
                 .setName(strings.settings.enableDragResize)
-                .setDesc("Allow resizing images by dragging edges of the image.")
-                .then((setting) => addInfoIcon(setting, "This creates a new <DIV> under the image to show resizing HANDLES. But this might cause some incompatibility with certain themes and cause images to jump around."))
+                .setDesc(strings.settings.enableDragResizeDesc)
+                .then((setting) => addInfoIcon(setting, strings.settings.enableDragResizeInfo))
                 .addToggle((toggle) =>
                     toggle
                         .setValue(this.plugin.settings.isDragResizeEnabled)
@@ -1059,8 +1059,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             new Setting(imageDragResizeSection)
                 .setName(strings.settings.disableObsidianImageSelectionOnClick)
-                .then((setting) => addInfoIcon(setting, "Keep focus in the editor when clicking an internal image in live preview instead of showing Obsidian's default outline/resize corner. Cursor placement follows the drop/paste cursor position setting."))
-                .setDesc("Keep focus in the editor when clicking an internal image in live preview instead of showing Obsidian's default outline/resize corner. Cursor placement follows the drop/paste cursor position setting.")
+                .then((setting) => addInfoIcon(setting, strings.settings.disableObsidianImageSelectionOnClickInfo))
+                .setDesc(strings.settings.disableObsidianImageSelectionOnClickDesc)
                 .addToggle((toggle) =>
                     toggle
                         .setValue(this.plugin.settings.disableObsidianImageSelectionOnClick)
@@ -1074,7 +1074,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             new Setting(imageDragResizeSection)
                 .setName(strings.settings.cursorPositionDuringResize)
                 // eslint-disable-next-line obsidianmd/ui/sentence-case -- Intentional messaging style
-                .then((setting) => addInfoIcon(setting, "Where to place the cursor when resizing an image. Note: 'don't move cursor' - will try to keep your exisiting cursor in place but if you DRAG-RESIZE and cursor is still over the image when you finish resizing, it will get the text selected."))
+                .then((setting) => addInfoIcon(setting, strings.settings.cursorPositionDuringResizeInfo))
                 .addDropdown((dropdown) => {
                     dropdown
                         .addOption("front", strings.settings.atFrontOfLink)
@@ -1239,7 +1239,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             new Setting(imageCaptionSection)
                 .setName(strings.settings.color)
-                .setDesc("Choose a color for image captions e.g.: red, grey, white, black, hsl(50, 50%, 50%), rgb(50%, 75%, 100%) ")
+                .setDesc(strings.settings.colorDesc)
                 .addText(text =>
                     text.setValue(this.plugin.settings.captionColor)
                         .onChange(async (value) => {
@@ -1266,7 +1266,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             new Setting(imageCaptionSection)
                 .setName(strings.settings.backgroundColor)
-                .setDesc("Choose a background color for image captions (e.g.: transparent, #f5f5f5, rgba(255,255,255,0.8))")
+                .setDesc(strings.settings.backgroundColorDesc)
                 .addText(text =>
                     text.setValue(this.plugin.settings.captionBackgroundColor)
                         .onChange(async (value) => {
@@ -1529,15 +1529,15 @@ export class ImageConverterSettingTab extends PluginSettingTab {
     getPresetGroupDescription(activePresetSetting: ActivePresetSetting): string {
         switch (activePresetSetting) {
             case "selectedFolderPreset":
-                return "Define where converted images will be stored. Choose from predefined locations or create custom paths using variables.";
+                return strings.settings.folderPresetDesc;
             case "selectedFilenamePreset":
-                return "Control how converted images are named. Use variables like {notename}, {timestamp}, {uuid}, or {MD5:filename} to create unique filenames.";
+                return strings.settings.filenamePresetDesc;
             case "selectedConversionPreset":
-                return "Control the output format, quality, and resizing options for converted images. This allows to significantly reduce file size and keep vault size small.";
+                return strings.settings.conversionPresetDesc;
             case "selectedLinkFormatPreset":
-                return "Determine how image links are inserted into notes. Choose between Wikilinks and Markdown links, and specify how the file path should be formatted. This allows to use a different link style for images than your vault's default, offering better cross-compatibility with other applications.";
+                return strings.settings.linkFormatPresetDesc;
             case "selectedResizePreset":
-                return "Configure non-destructive resizing options for images directly within the editor. This allows to adjust the display size without altering the original file.";
+                return strings.settings.resizePresetDesc;
             default:
                 return "";
         }
@@ -1621,7 +1621,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             // Edit Button
             new ButtonComponent(actionsContainer)
                 .setIcon("pencil")
-                .setTooltip("Edit")
+                .setTooltip(strings.settings.editTooltip)
                 .onClick(() => {
                     let correctActivePresetSetting = activePresetSetting;
                     if (preset.hasOwnProperty('linkFormat')) { // Check if it's a Link Format preset
@@ -1636,7 +1636,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             new ButtonComponent(actionsContainer)
                 .setIcon("trash")
                 .setClass("danger")
-                .setTooltip("Delete")
+                .setTooltip(strings.settings.deleteTooltip)
                 .onClick(() => {
                     new ConfirmDialog(
                         this.app,
@@ -1868,7 +1868,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         new ButtonComponent(inputContainer)
             .setIcon("help-circle")
-            .setTooltip("Show available variables")
+            .setTooltip(strings.settings.showAvailableVariablesTooltip)
             .onClick(showVariablesCallback);
 
         // Add preview area
@@ -2012,7 +2012,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             new ButtonComponent(inputContainer)
                 .setIcon("help-circle")
-                .setTooltip("Show available variables")
+                .setTooltip(strings.settings.showAvailableVariablesTooltip)
                 .onClick(showVariablesCallback);
 
             const previewContainer = wrapper.createDiv("image-converter-preview-container");
@@ -2070,7 +2070,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             new ButtonComponent(inputContainer)
                 .setIcon("help-circle")
-                .setTooltip("Show available variables")
+                .setTooltip(strings.settings.showAvailableVariablesTooltip)
                 .onClick(showVariablesCallback);
 
             const previewContainer = wrapper.createDiv("image-converter-preview-container");
@@ -2256,7 +2256,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         if (preset.outputFormat === "PNGQUANT") {
             const executablePathSetting = new Setting(containerEl)
                 .setName(strings.settings.executablePathForPngquant)
-                .then((setting) => addInfoIcon(setting, "Provide full-path to the binary file. It can be inside vault or anywhere in your file system."))
+                .then((setting) => addInfoIcon(setting, strings.settings.executablePathForPngquantInfo))
                 .setClass("image-converter-pngquant-executable-path") // Add class for easy selection
                 .addText((text) => {
                     text.setValue(preset.pngquantExecutablePath || "")
@@ -2321,7 +2321,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
                 presetSetting.settingEl.show();
                 // eslint-disable-next-line obsidianmd/ui/sentence-case -- Technical description
-                presetSetting.setDesc("Encoding preset (speed vs. compression).");
+                presetSetting.setDesc(strings.settings.ffmpegPresetDesc);
 
                 const dropdown = presetSetting.controlEl.querySelector('select');
                 if (dropdown) {
@@ -2340,13 +2340,13 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             const executablePathSetting = new Setting(containerEl)
                 // eslint-disable-next-line obsidianmd/ui/sentence-case -- Product name
                 .setName(strings.settings.ffmpegExecutablePath)
-                .then((setting) => addInfoIcon(setting, "Provide full-path to the binary file. It can be inside vault or anywhere in your file system."))
+                .then((setting) => addInfoIcon(setting, strings.settings.executablePathForPngquantInfo))
                 .setClass("image-converter-ffmpeg-executable-path")
                 .addButton(button => {
                     button
                         .setIcon("search")
                         // eslint-disable-next-line obsidianmd/ui/sentence-case -- FFmpeg is the official brand name
-                        .setTooltip("Auto-detect FFmpeg")
+                        .setTooltip(strings.settings.autoDetectFfmpegTooltip)
                         .setClass("image-converter-icon-button")
                         .onClick(async () => {
                             button.setDisabled(true);
@@ -2532,7 +2532,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                                     // eslint-disable-next-line obsidianmd/ui/sentence-case -- Technical terms: AV1, FFmpeg
                                     new Notice(strings.settings.noWorkingAv1EncoderFound, 5000);
                                     // eslint-disable-next-line obsidianmd/ui/sentence-case
-                                    encoderDetectionSetting.setDesc("No working encoder found. Install FFmpeg with libaom-av1, libsvtav1, or ensure hardware drivers are installed.");
+                                    encoderDetectionSetting.setDesc(strings.settings.noWorkingEncoderFound);
                                     resetEncoderUi(encoderDetectionSetting, crfSetting, presetSetting);
                                 }
                             } catch (error) {
@@ -2586,7 +2586,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 // eslint-disable-next-line obsidianmd/ui/sentence-case -- Product name
                 .setName(strings.settings.ffmpegPreset)
                 // eslint-disable-next-line obsidianmd/ui/sentence-case -- Technical description
-                .setDesc("Encoding preset (speed vs. compression).")
+                .setDesc(strings.settings.ffmpegPresetDesc)
                 .setClass("image-converter-ffmpeg-preset")
                 // Change this to a dropdown:
                 .addDropdown(dropdown => {
@@ -2794,7 +2794,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         const newSetting = new Setting(containerEl)
             .setName(strings.settings.revertToOriginalIfLarger)
             .setClass("image-converter-revert-to-original")
-            .setDesc("If the processed image filesize is larger than the original, use the original image instead. Sometimes compression can increase file size, especially with certain formats or settings, but if you would prefer to always get smaller file sizes, enable this option.")
+            .setDesc(strings.settings.revertToOriginalIfLargerDesc)
             .addToggle((toggle) =>
                 toggle
                     .setValue(preset.revertToOriginalIfLarger ?? this.plugin.settings.revertToOriginalIfLarger)
@@ -2815,7 +2815,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             .setName(strings.settings.minimumCompressionSavings)
             .setClass("image-converter-min-savings-setting")
             // eslint-disable-next-line obsidianmd/ui/sentence-case
-            .setDesc("This option allows you to further specify, how much the file size must be reduced before compressing the image. Sometimes an image's size might shrink by only 3 KB, but the visible degradation in quality is significant. This option helps catch those cases and avoids compressing such images. Default is 30kb, which means if after compressing the image file size would reduce only by 30kb or less, then the original image bytes will be used instead. Set to 0 to always allow compression when the output is smaller.")
+            .setDesc(strings.settings.minimumCompressionSavingsDesc)
             .addText((text) =>
                 text
                     .setPlaceholder("30")
@@ -2867,7 +2867,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         // Link Format (Dropdown)
         new Setting(formContainer)
             .setName(strings.settings.linkFormat)
-            .setDesc("Choose between wikilink and Markdown format")
+            .setDesc(strings.settings.linkFormatDesc)
             .addDropdown((dropdown) => {
                 dropdown
                     .addOptions({
@@ -2884,7 +2884,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         // Path Format (Dropdown)
         new Setting(formContainer)
             .setName(strings.settings.pathFormat)
-            .setDesc("Choose how paths should be formatted")
+            .setDesc(strings.settings.pathFormatDesc)
             .addDropdown((dropdown) => {
                 dropdown
                     .addOptions({
@@ -3395,7 +3395,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         // Resize Dimension (Dropdown)
         new Setting(formContainer)
             .setName(strings.settings.resizeDimension)
-            .setDesc("Choose how to resize the image")
+            .setDesc(strings.settings.resizeDimensionDesc)
             .addDropdown((dropdown) => {
                 dropdown
                     .addOptions({
@@ -3506,7 +3506,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     },
                     true // Add units dropdown
                 )
-                    .setDesc("Set new custom width"); // Add description here
+                    .setDesc(strings.settings.setNewCustomWidth); // Add description here
                 break;
             case "height":
                 addInputSetting(
@@ -3521,7 +3521,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     },
                     true // Add units dropdown
                 )
-                    .setDesc("Set new custom height"); // Add description here
+                    .setDesc(strings.settings.setNewCustomHeight); // Add description here
                 break;
             case "longest-edge":
                 addInputSetting(
@@ -3536,7 +3536,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     },
                     true // Add units dropdown
                 )
-                    .setDesc("Plugin automatically reads the original image dimensions and applies the provided value to the longer of the width or height. The other dimension is then calculated automatically if 'maintain aspect ratio' is enabled."); // Add description here
+                    .setDesc(strings.settings.longestEdgeDesc); // Add description here
                 break;
             case "shortest-edge":
                 addInputSetting(
@@ -3551,7 +3551,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     },
                     true // Add units dropdown
                 )
-                    .setDesc("Plugin automatically reads the original image dimensions and applies the provided value to the shorter of the width or height. The other dimension is then calculated automatically if 'maintain aspect ratio' is enabled."); // Add description here
+                    .setDesc(strings.settings.shortestEdgeDesc); // Add description here
                 break;
             case "both":
                 customValueSetting = new Setting(formContainer)
@@ -3584,7 +3584,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                                 : "widthxheight"
                         );
                     })
-                    .setDesc("Set both width and height using the format |widthxheight (e.g., 300x200) or percentage format (e.g., 50x75). This does not preserve aspect ratio.");
+                    .setDesc(strings.settings.customSizeDesc);
                 if (buttonContainer) {
                     formContainer.insertBefore(
                         customValueSetting.settingEl,
@@ -3635,7 +3635,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                             "image-converter-resize-units-dropdown"
                         );
                     })
-                    .setDesc("Set the maximum width of the image to fit within the editor's width. You can specify a percentage or a fixed pixel value.");
+                    .setDesc(strings.settings.maxWidthDesc);
                 if (buttonContainer) {
                     formContainer.insertBefore(
                         editorMaxWidthValueSetting.settingEl,

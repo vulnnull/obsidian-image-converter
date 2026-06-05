@@ -479,11 +479,25 @@ export const zhCN: DeepPartial<TranslationStrings> = {
 		sameFolderAsCurrentNote: "与当前笔记相同的文件夹",
 		keepOriginalName: "保留原始名称",
 		noteNameTimestamp: "笔记名-时间戳",
+		// 新增设置字符串
+		revertToOriginalIfLargerDesc: "如果处理后的图片文件大小大于原始图片，则使用原始图片。有时压缩会增加文件大小，特别是某些格式或设置下，但如果您希望始终获得更小的文件大小，请启用此选项。",
+		minimumCompressionSavingsDesc: "此选项允许您进一步指定压缩图片前必须减少多少文件大小。有时图片大小可能只缩小 3 KB，但质量的可见下降很明显。此选项有助于捕获这些情况并避免压缩此类图片。默认为 30kb，这意味着如果压缩后图片文件大小仅减少 30kb 或更少，则将使用原始图片字节。设置为 0 则在输出更小时始终允许压缩。",
+		linkFormatDesc: "在 wikilink 和 Markdown 格式之间选择",
+		pathFormatDesc: "选择路径的格式化方式",
+		resizeDimensionDesc: "选择如何调整图片大小",
+		setNewCustomWidth: "设置新的自定义宽度",
+		setNewCustomHeight: "设置新的自定义高度",
+		longestEdgeDesc: "插件自动读取原始图片尺寸，并将提供的值应用于宽度或高度中较长的一边。如果启用了'保持宽高比'，另一边将自动计算。",
+		shortestEdgeDesc: "插件自动读取原始图片尺寸，并将提供的值应用于宽度或高度中较短的一边。如果启用了'保持宽高比'，另一边将自动计算。",
+		customSizeDesc: "使用 |宽x高 格式（例如 300x200）或百分比格式（例如 50x75）同时设置宽度和高度。这不会保持宽高比。",
+		maxWidthDesc: "设置图片的最大宽度以适应编辑器宽度。您可以指定百分比或固定像素值。",
+		noWorkingEncoderFound: "未找到可用的编码器。请安装支持 libaom-av1、libsvtav1 的 FFmpeg，或确保已安装硬件驱动程序。",
+		// 工具提示
+		editTooltip: "编辑",
+		deleteTooltip: "删除",
+		showAvailableVariablesTooltip: "显示可用变量",
+		autoDetectFfmpegTooltip: "自动检测 FFmpeg",
 	},
-
-	// ----------------------------------------------------------------
-	// 图片处理器 (from ImageProcessor.ts)
-	// ----------------------------------------------------------------
 	imageProcessor: {
 		failedToProcessImage: '处理图片"{filename}"失败（目标格式：{format}）：{message}',
 		pngquantPathNotSet: "未设置 pngquant 可执行文件路径。请在插件设置中进行配置。",

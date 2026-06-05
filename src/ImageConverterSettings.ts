@@ -518,7 +518,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             switch (this.activeTab) {
                 case "folder":
                     this.renderPresetGroup(
-                        "Folder presets",
+                        strings.settings.tabFolder + " presets",
                         this.plugin.settings.folderPresets,
                         "selectedFolderPreset",
                         this.presetUIState.folder
@@ -526,7 +526,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     break;
                 case "filename":
                     this.renderPresetGroup(
-                        "Filename presets",
+                        strings.settings.tabFilename + " presets",
                         this.plugin.settings.filenamePresets,
                         "selectedFilenamePreset",
                         this.presetUIState.filename
@@ -534,7 +534,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     break;
                 case "conversion":
                     this.renderPresetGroup(
-                        "Conversion presets",
+                        strings.settings.tabConversion + " presets",
                         this.plugin.settings.conversionPresets,
                         "selectedConversionPreset",
                         this.presetUIState.conversion
@@ -542,7 +542,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     break;
                 case "linkformat":
                     this.renderPresetGroup(
-                        "Link format presets",
+                        strings.settings.tabLinkFormat + " presets",
                         this.plugin.settings.linkFormatSettings.linkFormatPresets,
                         "selectedLinkFormatPreset",
                         this.presetUIState.linkformat
@@ -550,7 +550,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     break;
                 case "resize":
                     this.renderPresetGroup(
-                        "Resize presets",
+                        strings.settings.tabResize + " presets",
                         this.plugin.settings.nonDestructiveResizeSettings.resizePresets, // Correct type
                         "selectedResizePreset",
                         this.presetUIState.resize
@@ -597,8 +597,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             .then((setting) => addInfoIcon(setting, strings.settings.cursorPositionAfterDropPasteInfo))
             .addDropdown((dropdown) => {
                 dropdown
-                    .addOption("front", "At the front of the link")
-                    .addOption("back", "At the back of the link")
+                    .addOption("front", strings.settings.atFrontOfLink)
+                    .addOption("back", strings.settings.atBackOfLink)
                     .setValue(this.plugin.settings.dropPasteCursorLocation)
                     .onChange(async (value: "front" | "back") => {
                         this.plugin.settings.dropPasteCursorLocation = value;
@@ -680,7 +680,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         chevronIcon.addClass("image-converter-chevron-icon");
 
         // Add a label that changes based on visibility
-        const toggleLabel = toggleVisibilityEl.createEl("span", { text: "Drop/paste presets", cls: "settings-section-title" });
+        const toggleLabel = toggleVisibilityEl.createEl("span", { text: strings.settings.dropPastePresets, cls: "settings-section-title" });
 
         // Add click handler to toggle visibility specifically to the toggle element
         toggleVisibilityEl.onClickEvent((event: MouseEvent) => {
@@ -704,7 +704,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         // --- Dropdown ---
         new Setting(globalPresetContainer)
-            // .setName("Drop/paste presets")
+            // .setName(strings.settings.dropPastePresets)
             .setDesc("Quickly apply a combination of presets")
             .addDropdown((dropdown) => {
                 dropdown.addOption("", "None");
@@ -805,7 +805,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         alignmentChevronIcon.addClass("settings-section-chevron-icon");
 
         // Section Title
-        toggleAlignmentVisibilityEl.createEl("span", { text: "Image alignment", cls: "settings-section-title" });
+        toggleAlignmentVisibilityEl.createEl("span", { text: strings.settings.imageAlignment, cls: "settings-section-title" });
         // // Clarification Text
         // toggleAlignmentVisibilityEl.createEl("span", {
         //     text: "For changes to take effect, please reload the app",
@@ -880,8 +880,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 ))
                 .addDropdown(dropdown => dropdown
                     .addOptions({
-                        config: "Within config folder (syncable)",
-                        plugin: "Within plugin folder (not syncable)",
+                        config: strings.settings.withinConfigFolderSyncable,
+                        plugin: strings.settings.withinPluginFolderNotSyncable,
                     })
                     .setValue(this.plugin.settings.imageAlignmentCacheLocation)
                     .onChange(async (value: "config" | "plugin") => {
@@ -932,7 +932,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         dragResizeChevronIcon.addClass("settings-section-chevron-icon");
 
         // Section Title
-        toggleDragResizeVisibilityEl.createEl("span", { text: "Drag & scroll resize", cls: "settings-section-title" });
+        toggleDragResizeVisibilityEl.createEl("span", { text: strings.settings.dragScrollResize, cls: "settings-section-title" });
         // // Clarification Text
         // toggleDragResizeVisibilityEl.createEl("span", {
         //     text: "For changes to take effect, please reload the app",
@@ -1077,10 +1077,10 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 .then((setting) => addInfoIcon(setting, "Where to place the cursor when resizing an image. Note: 'don't move cursor' - will try to keep your exisiting cursor in place but if you DRAG-RESIZE and cursor is still over the image when you finish resizing, it will get the text selected."))
                 .addDropdown((dropdown) => {
                     dropdown
-                        .addOption("front", "At the front of the link")
-                        .addOption("back", "At the back of the link")
-                        .addOption("below", "1 line below the image")
-                        .addOption("none", "Don't move cursor")
+                        .addOption("front", strings.settings.atFrontOfLink)
+                        .addOption("back", strings.settings.atBackOfLink)
+                        .addOption("below", strings.settings.oneLineBelowImage)
+                        .addOption("none", strings.settings.dontMoveCursor)
                         .setValue(this.plugin.settings.resizeCursorLocation)
                         .onChange(async (value: "front" | "back" | "below" | "none") => {
                             this.plugin.settings.resizeCursorLocation = value;
@@ -1124,7 +1124,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         captionChevronIcon.addClass("settings-section-chevron-icon");
 
         // Section Title
-        toggleCaptionVisibilityEl.createEl("span", { text: "Captions", cls: "settings-section-title" });
+        toggleCaptionVisibilityEl.createEl("span", { text: strings.settings.captions, cls: "settings-section-title" });
         // // Clarification Text
         // toggleCaptionVisibilityEl.createEl("span", {
         //     text: "For changes to take effect, please reload the app",
@@ -1350,11 +1350,11 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         // Only add tabs if they haven't been already
         if (tabContainer.children.length === 0) {
             // Correct the type of the first argument
-            this.createTab("folder", "folder", "Folder");
-            this.createTab("filename", "pencil", "Filename");
-            this.createTab("conversion", "settings", "Conversion");
-            this.createTab("linkformat", "link", "Link format");
-            this.createTab("resize", "frame", "Resize");
+            this.createTab("folder", "folder", strings.settings.tabFolder);
+            this.createTab("filename", "pencil", strings.settings.tabFilename);
+            this.createTab("conversion", "settings", strings.settings.tabConversion);
+            this.createTab("linkformat", "link", strings.settings.tabLinkFormat);
+            this.createTab("resize", "frame", strings.settings.tabResize);
         }
 
         // Highlight active tab 
@@ -1847,7 +1847,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         const settingWrapper = containerEl.createDiv("image-converter-custom-template-setting-wrapper");
 
         const customTemplateSetting = new Setting(settingWrapper)
-            .setName("Custom imagename")
+            .setName(strings.settings.customImagename)
             .setClass("image-converter-custom-template-setting");
 
         const inputContainer = customTemplateSetting.controlEl.createDiv("image-converter-input-button-container");
@@ -1899,13 +1899,13 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         void updatePreview();
 
         new Setting(settingWrapper)
-            .setName("If an output file already exists")
-            .setDesc("Choose how to handle filename conflicts")
+            .setName(strings.settings.ifOutputFileAlreadyExists)
+            .setDesc(strings.settings.ifOutputFileAlreadyExistsDesc)
             .addDropdown((dropdown) => {
                 dropdown
                     .addOptions({
-                        reuse: "Reuse existing file in vault (if any)",
-                        increment: "Add number suffix (-1, -2, etc.)",
+                        reuse: strings.settings.reuseExistingFile,
+                        increment: strings.settings.addNumberSuffix,
                     })
                     .setValue(preset.conflictResolution || "reuse")
                     .onChange((value: "reuse" | "increment") => {
@@ -1943,7 +1943,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         };
 
         new Setting(formContainer)
-            .setName("Location")
+            .setName(strings.settings.location)
             .addDropdown((dropdown) => {
                 dropdown
                     .addOptions(
@@ -1991,8 +1991,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             const wrapper = containerEl.createDiv("image-converter-subfolder-name-setting-wrapper");
 
             const subfolderNameSetting = new Setting(wrapper)
-                .setName("Subfolder name")
-                .setDesc("Enter a custom subfolder name or path.")
+                .setName(strings.settings.subfolderName)
+                .setDesc(strings.settings.subfolderNameDesc)
                 .setClass("image-converter-subfolder-name-setting");
 
             const inputContainer = subfolderNameSetting.controlEl.createDiv("image-converter-input-button-container");
@@ -2049,8 +2049,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             const wrapper = containerEl.createDiv("image-converter-custom-path-setting-wrapper");
 
             const customPathSetting = new Setting(wrapper)
-                .setName("Custom path")
-                .setDesc("Enter a custom path.")
+                .setName(strings.settings.customPath)
+                .setDesc(strings.settings.customPathDesc)
                 .setClass("image-converter-custom-template-setting");
 
             const inputContainer = customPathSetting.controlEl.createDiv("image-converter-input-button-container");
@@ -2111,17 +2111,17 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         preset: ConversionPreset
     ): void {
         const outputFormatSetting = new Setting(formContainer)
-            .setName("Output format")
+            .setName(strings.settings.outputFormat)
             .addDropdown((dropdown) => {
                 dropdown
                     .addOptions({
                         WEBP: "WEBP",
                         JPEG: "JPEG",
                         PNG: "PNG",
-                        ORIGINAL: "Original (Compress)",
-                        NONE: "None (No Conversion/Compression)",
-                        PNGQUANT: "pngquant (Compression for PNG only))",
-                        AVIF: "AVIF (via ffmpeg)",
+                        ORIGINAL: "strings.settings.originalCompress",
+                        NONE: "strings.settings.noneNoConversion",
+                        PNGQUANT: "strings.settings.pngquantCompression",
+                        AVIF: "strings.settings.avifViaFfmpeg",
                     })
                     .setValue(preset.outputFormat)
                     .onChange((value: OutputFormat) => {
@@ -2204,7 +2204,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         // Insert Quality setting after Output Format
         if (["WEBP", "JPEG", "ORIGINAL"].includes(preset.outputFormat)) {
             const newSetting = new Setting(containerEl)
-                .setName("Quality")
+                .setName(strings.settings.quality)
                 .setClass("image-converter-quality-setting")
                 .addSlider((slider) => {
                     slider
@@ -2224,7 +2224,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         // Insert Color Depth setting after Quality (if applicable) or Output Format
         if (preset.outputFormat === "PNG") {
             const newSetting = new Setting(containerEl)
-                .setName("Color depth")
+                .setName(strings.settings.colorDepth)
                 .setClass("image-converter-color-depth-setting")
                 .addSlider((slider) => {
                     slider
@@ -2255,7 +2255,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         // Insert PNGQUANT settings after Output Format
         if (preset.outputFormat === "PNGQUANT") {
             const executablePathSetting = new Setting(containerEl)
-                .setName("Executable path for pngquant")
+                .setName(strings.settings.executablePathForPngquant)
                 .then((setting) => addInfoIcon(setting, "Provide full-path to the binary file. It can be inside vault or anywhere in your file system."))
                 .setClass("image-converter-pngquant-executable-path") // Add class for easy selection
                 .addText((text) => {
@@ -2272,8 +2272,8 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             );
 
             const qualitySetting = new Setting(containerEl)
-                .setName("Quality range for pngquant")
-                .setDesc("Quality setting for pngquant (e.g., 65-80). Both min-max values must be provided.")
+                .setName(strings.settings.qualityRangeForPngquant)
+                .setDesc(strings.settings.qualityRangeForPngquantDesc)
                 .setClass("image-converter-pngquant-quality") // Add class for easy selection
                 .addText((text) => {
                     text.setValue(preset.pngquantQuality || "")
@@ -2339,7 +2339,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             const executablePathSetting = new Setting(containerEl)
                 // eslint-disable-next-line obsidianmd/ui/sentence-case -- Product name
-                .setName("FFmpeg executable path")
+                .setName(strings.settings.ffmpegExecutablePath)
                 .then((setting) => addInfoIcon(setting, "Provide full-path to the binary file. It can be inside vault or anywhere in your file system."))
                 .setClass("image-converter-ffmpeg-executable-path")
                 .addButton(button => {
@@ -2417,7 +2417,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             // Add encoder detection button
             const encoderDetectionSetting = new Setting(containerEl)
-                .setName("Encoder detection")
+                .setName(strings.settings.encoderDetection)
                 .setDesc(defaultEncoderDesc)
                 .setClass("image-converter-encoder-detection")
                 .addButton(button => {
@@ -2548,7 +2548,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             const crfSetting = new Setting(containerEl)
                 // eslint-disable-next-line obsidianmd/ui/sentence-case -- Product name and acronym
-                .setName("FFmpeg CRF")
+                .setName(strings.settings.ffmpegCrf)
                 .setDesc(defaultCrfDesc)
                 .setClass("image-converter-ffmpeg-crf")
                 .addText((text) => { // Keep as TextComponent for numeric input
@@ -2584,7 +2584,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
             const presetSetting = new Setting(containerEl)
                 // eslint-disable-next-line obsidianmd/ui/sentence-case -- Product name
-                .setName("FFmpeg preset")
+                .setName(strings.settings.ffmpegPreset)
                 // eslint-disable-next-line obsidianmd/ui/sentence-case -- Technical description
                 .setDesc("Encoding preset (speed vs. compression).")
                 .setClass("image-converter-ffmpeg-preset")
@@ -2672,7 +2672,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         // Insert Resize Mode setting after the last added setting
         const resizeSetting = new Setting(containerEl)
-            .setName("Resize mode")
+            .setName(strings.settings.resizeMode)
             .setClass("image-converter-resize-mode-setting")
             .addDropdown((dropdown) => {
                 dropdown
@@ -2707,7 +2707,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         if (["Fit", "Fill", "Width"].includes(preset.resizeMode)) {
             const newSetting = new Setting(containerEl)
-                .setName("Desired width")
+                .setName(strings.settings.desiredWidth)
                 .setClass("image-converter-desired-width-setting")
                 .addText((text) => {
                     text.setValue(preset.desiredWidth.toString()).onChange(
@@ -2726,7 +2726,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         if (["Fit", "Fill", "Height"].includes(preset.resizeMode)) {
             const newSetting = new Setting(containerEl)
-                .setName("Desired height")
+                .setName(strings.settings.desiredHeight)
                 .setClass("image-converter-desired-height-setting")
                 .addText((text) => {
                     text.setValue(preset.desiredHeight.toString()).onChange(
@@ -2770,7 +2770,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         if (preset.resizeMode !== "None") {
             const newSetting = new Setting(containerEl)
-                .setName("Scale mode")
+                .setName(strings.settings.scaleMode)
                 .setClass("image-converter-enlarge-or-reduce-setting")
                 .addDropdown((dropdown) => {
                     dropdown
@@ -2792,7 +2792,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         }
 
         const newSetting = new Setting(containerEl)
-            .setName("Revert to original if larger")
+            .setName(strings.settings.revertToOriginalIfLarger)
             .setClass("image-converter-revert-to-original")
             .setDesc("If the processed image filesize is larger than the original, use the original image instead. Sometimes compression can increase file size, especially with certain formats or settings, but if you would prefer to always get smaller file sizes, enable this option.")
             .addToggle((toggle) =>
@@ -2812,7 +2812,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         const minSavingsSetting = new Setting(containerEl)
             // eslint-disable-next-line obsidianmd/ui/sentence-case
-            .setName("Minimum compression savings (KB)")
+            .setName(strings.settings.minimumCompressionSavings)
             .setClass("image-converter-min-savings-setting")
             // eslint-disable-next-line obsidianmd/ui/sentence-case
             .setDesc("This option allows you to further specify, how much the file size must be reduced before compressing the image. Sometimes an image's size might shrink by only 3 KB, but the visible degradation in quality is significant. This option helps catch those cases and avoids compressing such images. Default is 30kb, which means if after compressing the image file size would reduce only by 30kb or less, then the original image bytes will be used instead. Set to 0 to always allow compression when the output is smaller.")
@@ -2852,7 +2852,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         // 1. Preset Management:
         this.renderPresetGroup(
-            "Link format presets",
+            strings.settings.tabLinkFormat + " presets",
             this.plugin.settings.linkFormatSettings.linkFormatPresets,
             "selectedLinkFormatPreset",
             this.presetUIState.linkformat
@@ -2866,7 +2866,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
     ): void {
         // Link Format (Dropdown)
         new Setting(formContainer)
-            .setName("Link format")
+            .setName(strings.settings.linkFormat)
             .setDesc("Choose between wikilink and Markdown format")
             .addDropdown((dropdown) => {
                 dropdown
@@ -2883,7 +2883,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         // Path Format (Dropdown)
         new Setting(formContainer)
-            .setName("Path format")
+            .setName(strings.settings.pathFormat)
             .setDesc("Choose how paths should be formatted")
             .addDropdown((dropdown) => {
                 dropdown
@@ -3394,7 +3394,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
     renderResizePresetFormFields(formContainer: HTMLElement, preset: NonDestructiveResizePreset): void {
         // Resize Dimension (Dropdown)
         new Setting(formContainer)
-            .setName("Resize dimension")
+            .setName(strings.settings.resizeDimension)
             .setDesc("Choose how to resize the image")
             .addDropdown((dropdown) => {
                 dropdown
@@ -3555,7 +3555,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 break;
             case "both":
                 customValueSetting = new Setting(formContainer)
-                    .setName("Custom value")
+                    .setName(strings.settings.customValue)
                     .setClass("image-converter-resize-custom-setting")
                     .addText((text) => {
                         text.setValue(preset.customValue || "")
@@ -3594,7 +3594,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 break;
             case "editor-max-width":
                 editorMaxWidthValueSetting = new Setting(formContainer)
-                    .setName("Max width value")
+                    .setName(strings.settings.maxWidthValue)
                     .setClass(
                         "image-converter-resize-editor-max-width-value-setting"
                     )
@@ -3652,7 +3652,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             preset.resizeDimension !== "both"
         ) {
             aspectToggle = new Setting(formContainer)
-                .setName("Maintain aspect ratio")
+                .setName(strings.settings.maintainAspectRatio)
                 .setClass("image-converter-maintain-aspect-ratio-setting")
                 .setDesc(
                     "Preserve the image's original proportions when resizing."
@@ -3697,7 +3697,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             preset.resizeDimension !== "editor-max-width"
         ) {
             const scaleModeSetting = new Setting(formContainer)
-                .setName("Scale mode")
+                .setName(strings.settings.scaleMode)
                 .setClass("image-converter-resize-scale-mode-setting")
                 .setDesc(
                     // eslint-disable-next-line obsidianmd/ui/sentence-case -- Technical description with list
@@ -3727,7 +3727,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         // Respect Editor Max Width Toggle (not applicable for "editor-max-width")
         if (preset.resizeDimension !== "editor-max-width" && preset.resizeDimension !== "none") {
             const respectWidthToggle = new Setting(formContainer)
-                .setName("Respect editor max width")
+                .setName(strings.settings.respectEditorMaxWidth)
                 .setClass("image-converter-resize-respect-width-setting")
                 .setDesc(
                     "When calculating dimensions, prevent the image from exceeding the editor's width."

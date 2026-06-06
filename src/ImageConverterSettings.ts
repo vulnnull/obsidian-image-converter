@@ -636,9 +636,9 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             .setDesc(strings.settings.showWindowDesc)
             .addDropdown((dropdown) => {
                 dropdown
-                    .addOption("always", "Always show")
-                    .addOption("never", "Never show")
-                    .addOption("ask", "Ask each time")
+                    .addOption("always", strings.settings.alwaysShow)
+                    .addOption("never", strings.settings.neverShow)
+                    .addOption("ask", strings.settings.askEachTime)
                     .setValue(this.plugin.settings.modalBehavior)
                     .onChange(async (value: ModalBehavior) => {
                         this.plugin.settings.modalBehavior = value;
@@ -707,7 +707,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             // .setName(strings.settings.dropPastePresets)
             .setDesc(strings.settings.dropPastePresetsDesc)
             .addDropdown((dropdown) => {
-                dropdown.addOption("", "None");
+                dropdown.addOption("", strings.settings.noneOption);
                 this.plugin.settings.globalPresets.forEach((preset) => {
                     dropdown.addOption(preset.name, preset.name);
                 });
@@ -1191,7 +1191,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 .setDesc(strings.settings.textTransformDesc)
                 .addDropdown(dropdown =>
                     dropdown.addOptions({
-                        "none": "None",
+                        "none": strings.settings.noneOption,
                         "uppercase": "UPPERCASE",
                         "lowercase": "lowercase",
                         "capitalize": "Capitalize"
@@ -2677,13 +2677,13 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             .addDropdown((dropdown) => {
                 dropdown
                     .addOptions({
-                        None: "None",
-                        Fit: "Fit",
-                        Fill: "Fill",
-                        LongestEdge: "Longest Edge",
-                        ShortestEdge: "Shortest Edge",
-                        Width: "Width",
-                        Height: "Height",
+                        None: strings.settings.resizeModeNone,
+                        Fit: strings.settings.resizeModeFit,
+                        Fill: strings.settings.resizeModeFill,
+                        LongestEdge: strings.settings.resizeModeLongestEdge,
+                        ShortestEdge: strings.settings.resizeModeShortestEdge,
+                        Width: strings.settings.resizeModeWidth,
+                        Height: strings.settings.resizeModeHeight,
                     })
                     .setValue(preset.resizeMode)
                     .onChange((value: ResizeMode) => {
@@ -2872,7 +2872,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 dropdown
                     .addOptions({
                         wikilink: "Wikilink",
-                        markdown: "Markdown",
+                        markdown: strings.settings.linkFormatMarkdown,
                     })
                     .setValue(preset.linkFormat)
                     .onChange((value: LinkFormat) => {
@@ -3123,41 +3123,41 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         const addExample = async (template: string) => {
             const exampleEl = fragment.createEl("p", { cls: "image-converter-summary-example" });
-            exampleEl.textContent = "Example: loading..."; // Placeholder
+            exampleEl.textContent = strings.settings.exampleLoading; // Placeholder
 
             try {
                 const ctx = this.getPreviewContext();
                 const processedPath = await this.plugin.variableProcessor.processTemplate(template, ctx);
-                exampleEl.textContent = `Example: ${processedPath}`;
+                exampleEl.textContent = t(strings.settings.exampleValue, { value: processedPath });
             } catch (error) {
                 console.error('Preview generation error:', error);
-            exampleEl.textContent = 'Example: error generating preview';
+            exampleEl.textContent = strings.settings.exampleError;
             }
         };
 
         switch (preset.type) {
             case "DEFAULT":
-                addLine("Default (Using Obsidian's configured setting for attachments)");
+                addLine(strings.settings.folderSummaryDefault);
                 void addExample("Assets/{notename}/{imagename}");
                 break;
             case "ROOT":
-                addLine("Root folder of the vault (Top-level folder).");
+                addLine(strings.settings.folderSummaryRoot);
                 void addExample("{imagename}");
                 break;
             case "CURRENT":
-                addLine("Same folder as the note you're currently editing.");
+                addLine(strings.settings.folderSummaryCurrent);
                 void addExample("{notepath}/{imagename}");
                 break;
             case "SUBFOLDER":
-                addLine(`In subfolder: ${this.plugin.settings.subfolderTemplate}`);
+                addLine(t(strings.settings.folderSummarySubfolder, { template: this.plugin.settings.subfolderTemplate }));
                 void addExample(this.plugin.settings.subfolderTemplate);
                 break;
             case "CUSTOM":
-                addLine(`Custom location: ${preset.customTemplate}`);
+                addLine(t(strings.settings.folderSummaryCustom, { template: preset.customTemplate ?? '' }));
                 void addExample(preset.customTemplate || "");
                 break;
             default:
-                addLine("Unknown location");
+                addLine(strings.settings.folderSummaryUnknown);
                 break;
         }
 
@@ -3176,26 +3176,26 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         const addExample = async (template: string) => {
             const exampleEl = fragment.createEl("p", { cls: "image-converter-summary-example" });
-            exampleEl.textContent = "Example: loading..."; // Placeholder
+            exampleEl.textContent = strings.settings.exampleLoading; // Placeholder
 
             try {
                 const ctx = this.getPreviewContext();
                 const processedPath = await this.plugin.variableProcessor.processTemplate(template, ctx);
-                exampleEl.textContent = `Example: ${processedPath}`;
+                exampleEl.textContent = t(strings.settings.exampleValue, { value: processedPath });
             } catch (error) {
                 console.error('Preview generation error:', error);
-                exampleEl.textContent = 'Example: error generating preview';
+                exampleEl.textContent = strings.settings.exampleError;
             }
         };
 
-        addLine(`Template: ${preset.customTemplate || "{imagename}"}`);
+        addLine(t(strings.settings.templateValue, { value: preset.customTemplate || "{imagename}" }));
         void addExample(preset.customTemplate || "{imagename}");
 
         if (preset.skipRenamePatterns) {
-            addLine(`Skip rename patterns: ${preset.skipRenamePatterns}`);
+            addLine(t(strings.settings.skipRenamePatternsValue, { value: preset.skipRenamePatterns }));
         }
         if (preset.conflictResolution) {
-            addLine(`If an output file already exists: ${preset.conflictResolution}`);
+            addLine(t(strings.settings.conflictResolutionValue, { value: preset.conflictResolution }));
         }
 
         containerEl.appendChild(fragment);
@@ -3204,7 +3204,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
 
     getLinkFormatPresetSummary(preset: LinkFormatPreset): string {
-        return `Link Type: ${preset.linkFormat}, Path Type: ${preset.pathFormat}`;
+        return t(strings.settings.linkFormatSummary, { linkFormat: preset.linkFormat, pathFormat: preset.pathFormat });
     }
 
     getConversionPresetSummary(preset: ConversionPreset): DocumentFragment {
@@ -3214,22 +3214,22 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             fragment.createEl("p", { text });
         };
 
-        addLine(`Format: ${preset.outputFormat}`);
+        addLine(t(strings.settings.formatValue, { format: preset.outputFormat }));
 
         if (preset.outputFormat !== "NONE") {
             // Only show quality for formats that use it (not AVIF - it uses CRF instead)
             if (preset.outputFormat !== "AVIF") {
-                addLine(`Quality: ${preset.quality}`);
+                addLine(t(strings.settings.qualityValue, { quality: preset.quality }));
             }
             if (preset.outputFormat === "PNG") {
-                addLine(`Color Depth: ${preset.colorDepth}`);
+                addLine(t(strings.settings.colorDepthValue, { colorDepth: preset.colorDepth }));
             }
             if (preset.outputFormat === "AVIF") {
-                addLine(`FFmpeg CRF: ${preset.ffmpegCrf}`);
-                addLine(`FFmpeg Preset: ${preset.ffmpegPreset}`);
+                addLine(t(strings.settings.ffmpegCrfValue, { crf: preset.ffmpegCrf ?? 23 }));
+                addLine(t(strings.settings.ffmpegPresetValue, { preset: preset.ffmpegPreset ?? 'medium' }));
             }
 
-            addLine(`Resize: ${preset.resizeMode}`);
+            addLine(t(strings.settings.resizeValue, { resizeMode: preset.resizeMode }));
 
             switch (preset.resizeMode) {
                 case "Fit":
@@ -3237,33 +3237,33 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     addLine(`(${preset.desiredWidth}x${preset.desiredHeight})`);
                     break;
                 case "Width":
-                    addLine(`(Width: ${preset.desiredWidth})`);
+                    addLine(t(strings.settings.widthValue, { width: preset.desiredWidth }));
                     break;
                 case "Height":
-                    addLine(`(Height: ${preset.desiredHeight})`);
+                    addLine(t(strings.settings.heightValue, { height: preset.desiredHeight }));
                     break;
                 case "LongestEdge":
-                    addLine(`(Longest Edge: ${preset.desiredLongestEdge})`);
+                    addLine(t(strings.settings.longestEdgeValue, { value: preset.desiredLongestEdge }));
                     break;
                 case "ShortestEdge":
-                    addLine(`(Shortest Edge: ${preset.desiredLongestEdge})`);
+                    addLine(t(strings.settings.shortestEdgeValue, { value: preset.desiredLongestEdge }));
                     break;
                 default: // "None"
                     break;
             }
 
             if (preset.resizeMode !== "None") {
-                addLine(`Enlarge/Reduce: ${preset.enlargeOrReduce}`);
+                addLine(t(strings.settings.enlargeReduceValue, { value: preset.enlargeOrReduce }));
             }
 
-            addLine(`Allow Larger Files: ${preset.allowLargerFiles ? "Yes" : "No"}`);
+            addLine(t(strings.settings.allowLargerFilesValue, { value: preset.allowLargerFiles ? strings.settings.yes : strings.settings.no }));
         }
 
         if (preset.skipConversionPatterns) {
             addLine(`Skip Patterns: ${preset.skipConversionPatterns}`);
         }
         if (preset.revertToOriginalIfLarger) {
-            addLine("Revert to original if larger: Yes");
+            addLine(strings.settings.revertToOriginalYes);
             if (preset.minimumCompressionSavingsInKB !== undefined) {
                 addLine(`Minimum compression savings (KB): ${preset.minimumCompressionSavingsInKB}`);
             }
@@ -3334,57 +3334,57 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         const shortestEdgeValue = `${preset.shortestEdge}${preset.resizeUnits === "percentage" ? "%" : "px"}`;
         const editorMaxWidthValue = `${preset.editorMaxWidthValue}${preset.resizeUnits === "percentage" ? "%" : "px"}`;
         const scaleModeValue = preset.resizeScaleMode;
-        const respectEditorMaxWidthValue = preset.respectEditorMaxWidth ? "Yes" : "No";
-        const maintainAspectRatioValue = preset.maintainAspectRatio ? "Yes" : "No";
+        const respectEditorMaxWidthValue = preset.respectEditorMaxWidth ? strings.settings.yes : strings.settings.no;
+        const maintainAspectRatioValue = preset.maintainAspectRatio ? strings.settings.yes : strings.settings.no;
 
         switch (preset.resizeDimension) {
             case "none":
-                addLine("No resizing");
+                addLine(strings.settings.noResizing);
                 break;
             case "width":
-                addLine(`Width: ${widthValue}`);
-                addLine(`Scale Mode: ${scaleModeValue}`);
-                addLine(`Respect Editor Max Width: ${respectEditorMaxWidthValue}`);
-                addLine(`Maintain Aspect Ratio: ${maintainAspectRatioValue}`);
+                addLine(t(strings.settings.widthPx, { value: widthValue }));
+                addLine(t(strings.settings.scaleModeValue, { value: scaleModeValue }));
+                addLine(t(strings.settings.respectEditorMaxWidthValue, { value: respectEditorMaxWidthValue }));
+                addLine(t(strings.settings.maintainAspectRatioValue, { value: maintainAspectRatioValue }));
                 break;
             case "height":
-                addLine(`Height: ${heightValue}`);
-                addLine(`Scale Mode: ${scaleModeValue}`);
-                addLine(`Respect Editor Max Width: ${respectEditorMaxWidthValue}`);
-                addLine(`Maintain Aspect Ratio: ${maintainAspectRatioValue}`);
+                addLine(t(strings.settings.heightPx, { value: heightValue }));
+                addLine(t(strings.settings.scaleModeValue, { value: scaleModeValue }));
+                addLine(t(strings.settings.respectEditorMaxWidthValue, { value: respectEditorMaxWidthValue }));
+                addLine(t(strings.settings.maintainAspectRatioValue, { value: maintainAspectRatioValue }));
                 break;
             case "both":
-                addLine(`Custom: ${customValue}`);
-                addLine(`Scale Mode: ${scaleModeValue}`);
-                addLine(`Respect Editor Max Width: ${respectEditorMaxWidthValue}`);
-                addLine(`Maintain Aspect Ratio: ${maintainAspectRatioValue}`);
+                addLine(t(strings.settings.customSizeValue, { value: customValue ?? '' }));
+                addLine(t(strings.settings.scaleModeValue, { value: scaleModeValue }));
+                addLine(t(strings.settings.respectEditorMaxWidthValue, { value: respectEditorMaxWidthValue }));
+                addLine(t(strings.settings.maintainAspectRatioValue, { value: maintainAspectRatioValue }));
                 break;
             case "longest-edge":
-                addLine(`Longest Edge: ${longestEdgeValue}`);
-                addLine(`Scale Mode: ${scaleModeValue}`);
-                addLine(`Respect Editor Max Width: ${respectEditorMaxWidthValue}`);
-                addLine(`Maintain Aspect Ratio: ${maintainAspectRatioValue}`);
+                addLine(t(strings.settings.longestEdgePx, { value: longestEdgeValue }));
+                addLine(t(strings.settings.scaleModeValue, { value: scaleModeValue }));
+                addLine(t(strings.settings.respectEditorMaxWidthValue, { value: respectEditorMaxWidthValue }));
+                addLine(t(strings.settings.maintainAspectRatioValue, { value: maintainAspectRatioValue }));
                 break;
             case "shortest-edge":
-                addLine(`Shortest Edge: ${shortestEdgeValue}`);
-                addLine(`Scale Mode: ${scaleModeValue}`);
-                addLine(`Respect Editor Max Width: ${respectEditorMaxWidthValue}`);
-                addLine(`Maintain Aspect Ratio: ${maintainAspectRatioValue}`);
+                addLine(t(strings.settings.shortestEdgePx, { value: shortestEdgeValue }));
+                addLine(t(strings.settings.scaleModeValue, { value: scaleModeValue }));
+                addLine(t(strings.settings.respectEditorMaxWidthValue, { value: respectEditorMaxWidthValue }));
+                addLine(t(strings.settings.maintainAspectRatioValue, { value: maintainAspectRatioValue }));
                 break;
             case "original-width":
-                addLine("Original Width");
-                addLine(`Scale Mode: ${scaleModeValue}`);
-                addLine(`Respect Editor Max Width: ${respectEditorMaxWidthValue}`);
+                addLine(strings.settings.originalWidth);
+                addLine(t(strings.settings.scaleModeValue, { value: scaleModeValue }));
+                addLine(t(strings.settings.respectEditorMaxWidthValue, { value: respectEditorMaxWidthValue }));
                 break;
             case "original-height":
-                addLine("Original Height");
-                addLine(`Scale Mode: ${scaleModeValue}`);
-                addLine(`Respect Editor Max Width: ${respectEditorMaxWidthValue}`);
+                addLine(strings.settings.originalHeight);
+                addLine(t(strings.settings.scaleModeValue, { value: scaleModeValue }));
+                addLine(t(strings.settings.respectEditorMaxWidthValue, { value: respectEditorMaxWidthValue }));
                 break;
             case "editor-max-width":
-                addLine(`Editor Max Width: ${editorMaxWidthValue}`);
-                addLine(`Scale Mode: ${scaleModeValue}`);
-                addLine(`Respect Editor Max Width: ${respectEditorMaxWidthValue}`);
+                addLine(t(strings.settings.editorMaxWidthPx, { value: editorMaxWidthValue }));
+                addLine(t(strings.settings.scaleModeValue, { value: scaleModeValue }));
+                addLine(t(strings.settings.respectEditorMaxWidthValue, { value: respectEditorMaxWidthValue }));
                 break;
         }
 
@@ -3399,7 +3399,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             .addDropdown((dropdown) => {
                 dropdown
                     .addOptions({
-                        "none": "None",
+                        "none": strings.settings.noneOption,
                         "width": "Width",
                         "height": "Height",
                         "both": "WidthxHeight (Custom)",

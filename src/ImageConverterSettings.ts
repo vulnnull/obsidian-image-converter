@@ -855,10 +855,10 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 .setDesc(strings.settings.defaultAlignmentForNewImagesDesc)
                 .addDropdown(dropdown => dropdown
                     .addOptions({
-                        'none': 'None',
-                        'left': 'Left',
-                        'center': 'Center',
-                        'right': 'Right'
+                        'none': strings.settings.noneOption,
+                        'left': strings.settings.alignLeft,
+                        'center': strings.settings.alignCenter,
+                        'right': strings.settings.alignRight
                     })
                     .setValue(this.plugin.settings.imageAlignmentDefaultAlignment)
                     .onChange(async (value: 'none' | 'left' | 'center' | 'right') => {

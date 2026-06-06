@@ -556,6 +556,10 @@ export const zhCN: DeepPartial<TranslationStrings> = {
 		linkFormatMarkdown: "Markdown",
 		// 添加新预设按钮
 		addNewPreset: "+ 添加新预设",
+		presetsSuffix: "预设",
+		alignLeft: "左对齐",
+		alignCenter: "居中",
+		alignRight: "右对齐",
 	},
 	imageProcessor: {
 		failedToProcessImage: '处理图片"{filename}"失败（目标格式：{format}）：{message}',

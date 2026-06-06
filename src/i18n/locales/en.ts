@@ -553,6 +553,10 @@ export const en = {
 		linkFormatMarkdown: "Markdown",
 		// Add new preset button
 		addNewPreset: "+ Add new",
+		presetsSuffix: "presets",
+		alignLeft: "Left",
+		alignCenter: "Center",
+		alignRight: "Right",
 	},
 	imageProcessor: {
 		failedToProcessImage: 'Failed to process image "{filename}" (target: {format}): {message}',

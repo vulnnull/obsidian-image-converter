@@ -518,7 +518,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             switch (this.activeTab) {
                 case "folder":
                     this.renderPresetGroup(
-                        strings.settings.tabFolder + " presets",
+                        strings.settings.tabFolder + " " + strings.settings.presetsSuffix,
                         this.plugin.settings.folderPresets,
                         "selectedFolderPreset",
                         this.presetUIState.folder
@@ -526,7 +526,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     break;
                 case "filename":
                     this.renderPresetGroup(
-                        strings.settings.tabFilename + " presets",
+                        strings.settings.tabFilename + " " + strings.settings.presetsSuffix,
                         this.plugin.settings.filenamePresets,
                         "selectedFilenamePreset",
                         this.presetUIState.filename
@@ -534,7 +534,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     break;
                 case "conversion":
                     this.renderPresetGroup(
-                        strings.settings.tabConversion + " presets",
+                        strings.settings.tabConversion + " " + strings.settings.presetsSuffix,
                         this.plugin.settings.conversionPresets,
                         "selectedConversionPreset",
                         this.presetUIState.conversion
@@ -542,7 +542,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     break;
                 case "linkformat":
                     this.renderPresetGroup(
-                        strings.settings.tabLinkFormat + " presets",
+                        strings.settings.tabLinkFormat + " " + strings.settings.presetsSuffix,
                         this.plugin.settings.linkFormatSettings.linkFormatPresets,
                         "selectedLinkFormatPreset",
                         this.presetUIState.linkformat
@@ -550,7 +550,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                     break;
                 case "resize":
                     this.renderPresetGroup(
-                        strings.settings.tabResize + " presets",
+                        strings.settings.tabResize + " " + strings.settings.presetsSuffix,
                         this.plugin.settings.nonDestructiveResizeSettings.resizePresets, // Correct type
                         "selectedResizePreset",
                         this.presetUIState.resize
@@ -871,12 +871,11 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             new Setting(imageAlignmentSection)
                 .setName(strings.settings.imageAlignmentCacheLocation)
                 .setDesc(
-                    "Choose where to store the cache file for image alignments. " +
-                    "Note: App reload required."
+                    strings.settings.imageAlignmentCacheLocationDesc
                 )
                 .then((setting) => addInfoIcon(
                     setting,
-                    "If you use Obsidian Sync, it is strongly recommended to use the SAME location on all your devices to ensure consistent behavior. Default: Obsidian's config folder (syncable)."
+                    strings.settings.imageAlignmentCacheLocationInfo
                 ))
                 .addDropdown(dropdown => dropdown
                     .addOptions({
@@ -895,7 +894,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
             new Setting(imageAlignmentSection) // Interval setting is now inside the collapsible section
                 .setName(strings.settings.imageAlignmentCacheCleanupInterval)
                 .setDesc(
-                    "Interval (in minutes) to clean up redundant entries from image alignment cache. Default: 1 hour (0 to disable)"
+                    strings.settings.imageAlignmentCacheCleanupIntervalDesc
                 )
                 .addSlider(slider => slider
                     .setLimits(0, 120, 5) // Min: 0, Max: 120, Step: 5 (minutes)
@@ -1174,9 +1173,9 @@ export class ImageConverterSettingTab extends PluginSettingTab {
                 .setName(strings.settings.textAlignmentWithinCaption)
                 .addDropdown(dropdown =>
                     dropdown.addOptions({
-                        "left": "Left",
-                        "center": "Center",
-                        "right": "Right"
+                        "left": strings.settings.alignLeft,
+                        "center": strings.settings.alignCenter,
+                        "right": strings.settings.alignRight
                     })
                         .setValue(this.plugin.settings.captionAlignment)
                         .onChange(async (value) => {
@@ -2852,7 +2851,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
 
         // 1. Preset Management:
         this.renderPresetGroup(
-            strings.settings.tabLinkFormat + " presets",
+            strings.settings.tabLinkFormat + " " + strings.settings.presetsSuffix,
             this.plugin.settings.linkFormatSettings.linkFormatPresets,
             "selectedLinkFormatPreset",
             this.presetUIState.linkformat
@@ -3050,7 +3049,7 @@ export class ImageConverterSettingTab extends PluginSettingTab {
         });
         card.createEl("div", {
             // eslint-disable-next-line obsidianmd/ui/sentence-case -- Action button text
-            text: "+ Add new",
+            text: strings.settings.addNewPreset,
             cls: "image-converter-add-new-preset-text",
         });
 
